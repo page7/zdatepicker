@@ -1,5 +1,13 @@
 <h2>icalendar - a Jquery plugin that easy to develop and use.</h2>
 
+<h3>演示地址</h3>
+<a href="http://www.pt-framework.com/project/icalendar/">点击这里</a>
+<br />
+
+<h3>提问留言</h3>
+<a href="http://www.pt-framework.com/blog/?page_id=171">点击这里</a>
+<br />
+
 <h3>版本更新</h3>
 
 <h4>2.1</h4>
