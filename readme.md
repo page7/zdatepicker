@@ -4,8 +4,17 @@
 <a href="http://www.nolanchou.com/icalendar/" target="_blank">点击这里</a>
 <br />
 
+<h3>DEMO</h3>
+<a href="http://www.nolanchou.com/icalendar/demo.php" target="_blank">Demo.</a>
+<br />
 
 <h3>Change Log</h3>
+
+<h4>3.0.1</h4>
+Date：2014-01-31<br />
+Contributor：<a href="http://www.nolanchou.com" target="_blank">page7</a><br />
+	　1.Fix bug.<br />
+<br />
 
 <h4>3.0.0</h4>
 Date：2014-01-30<br />
