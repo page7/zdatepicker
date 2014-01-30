@@ -6,8 +6,8 @@
  * Dual licensed under the MIT or GPL Version 2 licenses.
  * http://jquery.org/license
  *
- * Version:3.0.0
- * Date:2014-01-30
+ * Version:3.0.1
+ * Date:2014-01-31
  */
 
 ;(function ($) {
@@ -60,6 +60,8 @@ $.fn.icalendar = function(options) {
 	// format to a date string's array.
 	var toArray = function(value) {
 
+		if(!value) return [];
+
 		switch(typeof(value)) {
 			case "number":
 				var temp = new Date();
@@ -77,7 +79,7 @@ $.fn.icalendar = function(options) {
 
 			case "object":
 				if(!$.isArray(value)) {
-					if(value.getTime){
+					if(value.getTime !== undefined) {
 						value = [value.getFullYear(), value.getMonth()+1, value.getDate()];
 					}else{
 						value = getDomVal(value);
@@ -102,7 +104,6 @@ $.fn.icalendar = function(options) {
 			var value = obj.text();
 		else
 			var value = obj.val();
-
 		return regStr(value);
 	};
 
@@ -116,7 +117,7 @@ $.fn.icalendar = function(options) {
 		pos[format.search("yyyy")] = "y";
 		pos[format.search("mm")] = "m";
 		pos[format.search("dd")] = "d";
-		var regs = format.replace(/yyyy/, "(\S*)").replace(/mm/, "(\S*)").replace(/dd/, "(\S*)"); //console.log(regs);
+		var regs = format.replace(/yyyy/, "(\\S*)").replace(/mm/, "(\\S*)").replace(/dd/, "(\\S*)"); //console.log(regs);
 		var re = new RegExp(regs);
 		var data = str.match(re);
 		if(data){
@@ -497,9 +498,9 @@ $.fn.icalendar = function(options) {
 
 
 	// on Return
-	var _return = function(date, dateobj, input, calendar, a, selected) {
+	var _return = function(date, dateObj, input, calendar, a, selected) {
 		if(opts.onReturn) {
-			opts.onReturn(date, dateobj, input, calendar, a, selected);
+			opts.onReturn(date, dateObj, input, calendar, a, selected);
 		}else {
 			$(input).val(date);
 			$.fn.icalendar.callback('return', {date:date, dateobj:dateObj, input:input, calendar:calendar, a:a, selected:selected});
@@ -570,7 +571,7 @@ $.fn.icalendar = function(options) {
 				// get date
 				var date = $(this).parent().attr("id").substr(5);
 				var datearr = toArray(date);
-				var dateobj = getDateObj(datearr);
+				var dateObj = getDateObj(datearr);
 				date = _format('date', datearr);
 
 				// change selected value
@@ -592,14 +593,14 @@ $.fn.icalendar = function(options) {
 
 				// Area
 				if($.isEmptyObject(opts.area)) {
-					_return(date, dateobj, obj, calendar, this, selected);
+					_return(date, dateObj, obj, calendar, this, selected);
 				}else{
 					if(!opts.area[0]) {
 						var newArea = {0:date, 1:opts.area[1]};
-						changeArea("start", newArea, date, dateobj, obj, calendar, this, selected);
+						changeArea("start", newArea, date, dateObj, obj, calendar, this, selected);
 					}else{
 						var newArea = {0:opts.area[0], 1:date};
-						changeArea("end", newArea, date, dateobj, obj, calendar, this, selected);
+						changeArea("end", newArea, date, dateObj, obj, calendar, this, selected);
 					}
 				}
 
@@ -671,7 +672,7 @@ $.fn.icalendar = function(options) {
 			calendar.find(".area").removeClass("area");
 			a.addClass("area");
 			$.fn.icalendar.callback("area", {date:date, dateobj:dateObj, input:obj, calendar:calendar, a:a, area:newArea});
-			_return(date, dateobj, obj, calendar, a, selected);
+			_return(date, dateObj, obj, calendar, a, selected);
 			return;
 		}
 
@@ -724,7 +725,7 @@ $.fn.icalendar = function(options) {
 			days.slice(start, end).children("a").addClass("area");
 
 			$.fn.icalendar.callback("area", {date:date, dateobj:dateObj, input:obj, calendar:calendar, a:a, area:newArea});
-			_return(date, dateobj, obj, calendar, a, selected);
+			_return(date, dateObj, obj, calendar, a, selected);
 		}
 	};
 

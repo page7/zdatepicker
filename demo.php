@@ -225,7 +225,6 @@
 
 <h5 id="pos">pos</h5>
 <ul>
-    <li class="note">position. (key must be like "2014-01-01")</li>
     <li>type:object</li>
     <li>default:{}</li>
 </ul>
