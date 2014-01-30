@@ -1,7 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!doctype html>
+<html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8">
     <title>DEMO - icalendar - a smaller and easier datepicker of jquery plugin.</title>
     <meta name="keywords" content="icalendar,js,jquery,plugin,datepicker,calendar,NolanChou 周" />
     <meta name="description" content="icalendar - a smaller and easier datepicker of jquery plugin." />
@@ -11,8 +11,10 @@
     <script type="text/javascript" src="./icalendar.js"></script>
 
     <style type="text/css">
-    body{ font:12px/120% Helvetica, Geneva, Arial, sans-serif; padding:20px; }
-    h1{ font-size:25px; color:#333; border-bottom:#CCC dashed 1px; padding:20px 0px; margin-bottom:0px; }
+    body{ font:12px/120% Helvetica, Geneva, Arial, sans-serif; padding:0px 30px; margin:0px; margin-left:250px; box-shadow:inset 5px 0px 5px #EEE; }
+    a{ color:#0080FF; }
+    a:hover{ color:#0063C6; }
+    h1{ font-size:25px; color:#333; border-bottom:#CCC dashed 1px; margin:0px; padding:40px 0px; margin-bottom:0px; }
     h2{ font-size:18px; color:#555; padding:10px 0px; margin:30px 0px 20px 0px; }
     h4{ font-size:14px; color:#666; padding:0px; }
     h5{ font-size:12px; color:#666; padding:0px; margin:0px; }
@@ -24,6 +26,11 @@
     dl,dt,dd{ margin:0px; padding:0px; }
     ul{ margin-top:0px; }
     ul .note{ list-style:none; color:#999; margin-left:-20px; padding:5px 0px; }
+    .directory{ position:fixed; top:0px; left:0px; padding:20px; width:200px; }
+    .directory h2{ margin:0px; }
+    .directory ul{ padding-left:20px; }
+    .directory ul li{ font-size:14px; line-height:20px; width:100%; }
+    .directory ul li ul li{ font-size:12px; }
     </style>
     <link href="http://agorbatchev.typepad.com/pub/sh/3_0_83/styles/shCore.css" rel="stylesheet" type="text/css" />
     <link href="http://agorbatchev.typepad.com/pub/sh/3_0_83/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
@@ -32,9 +39,53 @@
 
 <body>
 
-<h1><a name="demo">DEMO - icalendar</a></h1>
+<div class="directory">
+    <h2>Directory</h2>
+    <ul>
+        <li>
+            <a href="#style">Style</a>
+        </li>
+        <li>
+            <a href="#options">Options</a>
+        </li>
+        <li>
+            <a href="#callback">Callback</a>
+            <ul>
+                <li><a href="#type">parameter - type</a></li>
+                <li><a href="#arg">parameter - arg</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#demo">Demo</a>
+            <ul>
+                <li><a href="#demo_1">Simple</a></li>
+                <li><a href="#demo_2">Pick multiple dates.</a></li>
+                <li><a href="#demo_3-1">Set date ranges are disable.</a></li>
+                <li><a href="#demo_3-2">Setting option use array.</a></li>
+                <li><a href="#demo_4">Set dates or ranges are selected.</a></li>
+                <li><a href="#demo_5-1">Set a "AREA" range.</a></li>
+                <li><a href="#demo_5-2">Use a function to get ranges.</a></li>
+                <li><a href="#demo_6">Change other event to get icalendar.</a></li>
+                <li><a href="#demo_7-1">Position by direction</a></li>
+                <li><a href="#demo_7-2">Position by coordinate</a></li>
+                <li><a href="#demo_8">Close button</a></li>
+                <li><a href="#demo_9">Symbiont</a></li>
+                <li><a href="#demo_10">Show after icalendar init.</a></li>
+                <li><a href="#demo_11">Not show anything.</a></li>
+                <li><a href="#demo_12">Readonly</a></li>
+                <li><a href="#demo_13">Change Event for show icalendar.</a></li>
+                <li><a href="#demo_14-1">Date format</a></li>
+                <li><a href="#demo_14-2">Special era</a></li>
+                <li><a href="#demo_15">Replace return function, and use callback.</a></li>
+                <li><a href="#demo_16">Replace date to other string.</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
 
-<h2>Style</h2>
+<h1>DEMO - icalendar</h1>
+
+<h2 id="style">Style</h2>
 <pre class="brush:css; toolbar:false;">
 /* You Can Rewrite These */
 .icalendar{ position:absolute; width:210px; z-index:9998; display:none; background:#FFF; border:#999 solid 1px; overflow:hidden; margin:1px 0px; border-radius:5px; box-shadow:2px 2px 6px #CCC; }
@@ -68,69 +119,69 @@
 </pre>
 
 
-<h2>Options</h2>
-<h5>classname</h5>
+<h2 id="options">Options</h2>
+<h5 id="classname">classname</h5>
 <ul>
     <li class="note">icalendar container's class name.</li>
     <li>type:string</li>
     <li>default:"icalendar"</li>
 </ul>
 
-<h5>event</h5>
+<h5 id="event">event</h5>
 <ul>
     <li class="note">event of show icalendar. (don't use 'focus' and 'blur')</li>
     <li>type:string</li>
     <li>default:"click"</li>
 </ul>
 
-<h5>viewmonths</h5>
+<h5 id="viewmonths">viewmonths</h5>
 <ul>
     <li class="note">how many months to show.</li>
     <li>type:number</li>
     <li>default:2</li>
 </ul>
 
-<h5>format</h5>
+<h5 id="format">format</h5>
 <ul>
     <li class="note">all settings of string format for view.</li>
     <li>type:object</li>
     <li>default:{date:"yyyy-mm-dd",month:"yyyy-mm",year:"yyyy",onlymonth:"mm"}</li>
 </ul>
 
-<h5>daystr</h5>
+<h5 id="daystr">daystr</h5>
 <ul>
     <li>type:array</li>
     <li>default:["Sun","Mon","Tue","Wed","Thur","Fri","Sat"]</li>
 </ul>
 
-<h5>monthstr</h5>
+<h5 id="monthstr">monthstr</h5>
 <ul>
     <li>type:array</li>
     <li>default:["01","02","03","04","05","06","07","08","09","10","11","12"]</li>
 </ul>
 
-<h5>year2str</h5>
+<h5 id="year2str">year2str</h5>
 <ul>
     <li class="note">format a date to return.</li>
     <li>type:function</li>
     <li>default:null</li>
 </ul>
 
-<h5>str2year</h5>
+<h5 id="str2year">str2year</h5>
 <ul>
     <li class="note">format a string from input's value.</li>
     <li>type:function</li>
     <li>default:null</li>
 </ul>
 
-<h5>initmonth</h5>
+<h5 id="initmonth">initmonth</h5>
 <ul>
     <li class="note">select a month to show.</li>
     <li>type:string, microtime, Date obj, Dom, function</li>
     <li>default:null</li>
 </ul>
 
-<h5>symbiont</h5>
+<h5 id="symbiont">symbiont</h5>
 <ul>
     <li class="note">...(i can't explain it)</li>
     <li>type:boolean</li>
@@ -138,69 +189,69 @@
 </ul>
 
 
-<h5>readonly</h5>
+<h5 id="readonly">readonly</h5>
 <ul>
     <li>type:boolean</li>
     <li>default:false</li>
 </ul>
 
-<h5>disable</h5>
+<h5 id="disable">disable</h5>
 <ul>
     <li class="note">set date or ranges be disable. (date must format to like "2014-01-01")</li>
     <li>type:function, array, object</li>
     <li>default:{}</li>
 </ul>
 
-<h5>area</h5>
+<h5 id="area">area</h5>
 <ul>
     <li class="note">use two date / dom's value to make up a "AREA". (date must format to like "2014-01-01")</li>
     <li>type:function, array, object</li>
     <li>default:{}</li>
 </ul>
 
-<h5>selected</h5>
+<h5 id="selected">selected</h5>
 <ul>
     <li class="note">set date or ranges be selected. <br />(if setting is true, picking multiple dates is enabled. date must format to like "2014-01-01")</li>
     <li>type:boolean, object</li>
     <li>default:false</li>
 </ul>
 
-<h5>replace</h5>
+<h5 id="replace">replace</h5>
 <ul>
     <li class="note">replace a date to any string. (key must be like "2014-01-01")</li>
     <li>type:object</li>
     <li>default:null</li>
 </ul>
 
-<h5>pos</h5>
+<h5 id="pos">pos</h5>
 <ul>
     <li class="note">position. (key must be like "2014-01-01")</li>
     <li>type:object</li>
     <li>default:{}</li>
 </ul>
 
-<h5>use</h5>
+<h5 id="use">use</h5>
 <ul>
     <li class="note">use other dom (jquery selector: #id / .class ..) to build icalendar.</li>
     <li>type:string</li>
     <li>default:false</li>
 </ul>
 
-<h5>show</h5>
+<h5 id="show">show</h5>
 <ul>
     <li class="note">true: show when init / false: don't show on any event.</li>
     <li>type:boolean</li>
     <li>default:null</li>
 </ul>
 
-<h5>closebtn</h5>
+<h5 id="closebtn">closebtn</h5>
 <ul>
     <li class="note">show close button.</li>
     <li>type:boolean</li>
     <li>default:false</li>
 </ul>
 
-<h5>onReturn</h5>
+<h5 id="onReturn">onReturn</h5>
 <ul>
     <li class="note">change the default return func.</li>
     <li>type:function</li>
@@ -210,11 +261,11 @@
 
 
 
-<h2>Callback</h2>
+<h2 id="callback">Callback</h2>
 
 <h4>$.fn.icalendar.callback with two parameters: type and arg.<br />It's a global function! You can rewrite it.</h4>
 
-<h5>parameter - type</h5>
+<h5 id="type">parameter - type</h5>
 <ul>
     <li>return : after return date by 'onReturn'.</li>
     <li>close : after click close button.</li>
@@ -230,7 +281,7 @@
     <li>fail_to_area : after AREA have a fail, like : one date is null or two date can't be make up a range.</li>
 </ul>
 
-<h5>parameter - arg</h5>
+<h5 id="arg">parameter - arg</h5>
 <ul>
     <li>input : the dom of input.</li>
     <li>calendar : the dom of icalendar.</li>
@@ -244,9 +295,9 @@
 
 
 
-<h2>Demo</h2>
+<h2 id="demo">Demo</h2>
 
-<h4>1. Simple：</h4>
+<h4 id="demo_1">1. Simple</h4>
 <div class="demo">
     <input class="time1" value="" />
 
@@ -264,7 +315,7 @@
 
 
 
-<h4>2. Pick multiple dates:</h4>
+<h4 id="demo_2">2. Pick multiple dates.</h4>
 <div class="demo">
     <input class="time2" value="" />
 
@@ -281,7 +332,7 @@
 
 
 
-<h4>3-1. Set date ranges are disable.</h4>
+<h4 id="demo_3-1">3-1. Set date ranges are disable.</h4>
 <div class="demo">
     <input class="time3" value="<?=date('Y-m')?>-15" />
 
@@ -307,7 +358,7 @@
 </div>
 
 
-<h4>3-2. Setting option use array.</h4>
+<h4 id="demo_3-2">3-2. Setting option use array.</h4>
 <div class="demo">
     <input class="time3_2" value="<?=date('Y-m')?>-15" />
 
@@ -334,7 +385,7 @@
 
 
 
-<h4>4. Set dates or ranges are selected.</h4>
+<h4 id="demo_4">4. Set dates or ranges are selected.</h4>
 <div class="demo">
     <input class="time4" value="<?=date('Y-m')?>-15" />
 
@@ -362,7 +413,7 @@
 
 
 
-<h4>5-1. Set a "AREA" range.</h4>
+<h4 id="demo_5-1">5-1. Set a "AREA" range.</h4>
 <div class="demo">
     <input class="time5_a" value="<?=date('Y-m')?>-15" /> -- <input class="time5_b" value="<?=date('Y-m')?>-23" />
 
@@ -423,7 +474,7 @@
 
 
 
-<h4>5-2. Use a function to get ranges</h4>
+<h4 id="demo_5-2">5-2. Use a function to get ranges.</h4>
 <div class="demo">
     <input class="time5_2_a" value="<?=date('Y-m')?>-02" /> -- <input class="time5_2_b" value="<?=date('Y-m')?>-05"><br />
     <input class="time5_2_a" value="<?=date('Y-m')?>-09" /> -- <input class="time5_2_b" value="<?=date('Y-m')?>-12"><br />
@@ -510,7 +561,7 @@
 
 
 
-<h4>6. Change other event to get icalendar.</h4>
+<h4 id="demo_6">6. Change other event to get icalendar.</h4>
 <div class="demo">
     <input class="time6" value="<?=date('Y-m')?>-15" /><input type="button" value="click me!" onclick="doicalendar()" />
 
@@ -545,7 +596,7 @@
 
 
 
-<h4>7-1. Position by direction.</h4>
+<h4 id="demo_7-1">7-1. Position by direction</h4>
 <div class="demo">
     <input class="time7_1" value="<?=date('Y-m')?>-15" />
 
@@ -564,7 +615,7 @@
 </div>
 
 
-<h4>7-2. Position by coordinate.</h4>
+<h4 id="demo_7-2">7-2. Position by coordinate</h4>
 <div class="demo">
     <input class="time7_2" value="<?=date('Y-m')?>-15" />
 
@@ -584,7 +635,7 @@
 
 
 
-<h4>8. Close button.</h4>
+<h4 id="demo_8">8. Close button</h4>
 <div class="demo">
     <input class="time8" value="<?=date('Y-m')?>-15" />
 
@@ -605,7 +656,7 @@
 
 
 
-<h4>9. Symbiont：</h4>
+<h4 id="demo_9">9. Symbiont</h4>
 <div class="demo">
     <input class="time9_a" value="<?=date('Y-m')?>-15" /> -------
     <input class="time9_a" value="<?=date('Y-m')?>-15" /> -------
@@ -647,7 +698,7 @@
 
 
 
-<h4>10. Show after icalendar init.</h4>
+<h4 id="demo_10">10. Show after icalendar init.</h4>
 <div class="demo">
     <input class="time10" value="<?=date('Y-m')?>-15" />
 
@@ -668,7 +719,7 @@
 
 
 
-<h4>11. Not show anything.(but icalendar is inited.</h4>
+<h4 id="demo_11">11. Not show anything.(but icalendar is inited.</h4>
 <div class="demo">
     <input class="time11" value="<?=date('Y-m')?>-15" />
 
@@ -689,7 +740,7 @@
 
 
 
-<h4>12. Readonly</h4>
+<h4 id="demo_12">12. Readonly</h4>
 <div class="demo">
     <input class="time12" value="<?=date('Y-m')?>-15" />
 
@@ -710,7 +761,7 @@
 
 
 
-<h4>13. Change Event for show icalendar.</h4>
+<h4 id="demo_13">13. Change Event for show icalendar.</h4>
 <div class="demo">
     <input class="time13" value="<?=date('Y-m')?>-15" />
 
@@ -731,7 +782,7 @@
 
 
 
-<h4>14-1. Date format</h4>
+<h4 id="demo_14-1">14-1. Date format</h4>
 <div class="demo">
     <input class="time14_1" value="15,<?=date('M')?>/<?=date('Y')?>" />
 
@@ -758,7 +809,7 @@
 
 
 
-<h4>14-2. Special era</h4>
+<h4 id="demo_14-2">14-2. Special era</h4>
 <div class="demo">
     <input class="time14_2" value="" />
 
@@ -818,7 +869,7 @@
 
 
 
-<h4>15. replace return function. and use callback.</h4>
+<h4 id="demo_15">15. Replace return function. and use callback.</h4>
 <div class="demo">
     <iframe src="./demo15.html" frameborder="0" height="250" width="450"></iframe>
 
@@ -860,7 +911,7 @@
 </div>
 
 
-<h4>16. Replace a date</h4>
+<h4 id="demo_16">16. Replace date to other string.</h4>
 <div class="demo">
     <input class="time16" value="" />
 
