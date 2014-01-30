@@ -1,14 +1,14 @@
 <h2>icalendar - a smaller and easier datepicker of jquery plugin</h2>
 
 <h3>中文地址</h3>
-<a href="http://www.pt-framework.com/project/icalendar/">点击这里</a>
+<a href="http://www.nolanchou.com/icalendar/" target="_blank">点击这里</a>
 <br />
 
 
 <h3>Change Log</h3>
 
 <h4>3.0.0</h4>
-Date：2013-03-25<br />
+Date：2014-01-30<br />
 Contributor：<a href="http://www.nolanchou.com" target="_blank">page7</a><br />
 	　1.Fix bug.<br />
 	　2.Optimize: rewrite 40%+ code.<br />
