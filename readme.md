@@ -1,4 +1,4 @@
-<h2>icalendar - a Jquery datepicker plugin that easy to develop and use.</h2>
+<h2>icalendar - a smaller and easier datepicker of jquery plugin</h2>
 
 <h3>中文地址</h3>
 <a href="http://www.pt-framework.com/project/icalendar/">点击这里</a>
