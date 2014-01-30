@@ -3,87 +3,60 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>DEMO - icalendar - a Jquery plugin that easy to develop and use.</title>
-<meta name="keywords" content="ICalendar,jQuery插件,JS日历,Calendar" />
-<meta name="description" content="ICalendar Plug-in for jQuery | 一款便捷开发的日历jQuery插件，具有较高的开发自由度，提供完整的解决方案。" />
-<meta name="generator" content="Jquery" />
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-<script type="text/javascript" src="./icalendar_min.js"></script>
+<script type="text/javascript" src="./icalendar.js"></script>
 <link type="text/css" rel="stylesheet" href="./icalendar.css" />
-
 <style type="text/css">
-body{font-size:12px;}
-textarea{border:none; border-bottom:#666 dashed 1px; font-size:12px; width:400px; height:200px; color:#666;}
-dt{font-size:12px; font-weight:bold;}
+body{ font:12px/120% Helvetica, Geneva, Arial, sans-serif; padding:0px; }
+h1{ font-size:25px; color:#333; border-bottom:#CCC dashed 1px; padding:20px 0px; }
+h2{ font-size:18px; color:#555; padding:10px 0px; }
+h4{ font-size:14px; color:#666; padding:0px; }
+h5{ font-size:12px; color:#666; padding:0px; margin:0px; }
+.demo{ padding:0px 10px 20px 10px; }
+.code{ background:#EEE; border:#CCC dashed 1px; padding:10px; padding-bottom:20px; margin-top:20px; }
+.code .syntaxhighlighter{ padding:15px 0px; background:#FFF; margin-bottom:0px!important; }
+input{ font:14px/120% Helvetica, Geneva, Arial, sans-serif; border:#999 solid 1px; border-radius:5px; padding:5px 10px; color:#666; }
+input:focus{ border:#0080FF solid 1px; box-shadow:inset 0px 0px 5px #999; outline:#0080FF; color:#333; }
+dl,dt,dd{ margin:0px; padding:0px; }
 </style>
 </head>
 
 <body>
-<br />
-<a href="./demo.php">&lt;&lt; 返回全部实例</a>
-<br />
-<br />
 
-<h3>15. 综合案例<a name="f15"> </a></h3>
-<input class="time15" value="" style="width:400px;" ><br />
-<h5>代 码：</h5>
-<textarea style="height:400px;">
+<input class="time15" value="" style="width:400px;" />
+
+<script type="text/javascript">
 function returnSelect(){
     var timeArr = $('.time15').val().split(',');
-    var sel = {};
-    for(x in timeArr){
-        if(timeArr[x]) sel[x] = {0:timeArr[x]};
+    var sel = {}, i = 0;
+    for(var x in timeArr){
+        sel[x+1] = {0:timeArr[x]};
+        i = x + 1;
     }
-    return sel.length ? sel : true ;
+    return i > 1 ? sel : true ;
 }
 
-
-// 这里是 Return 接口，会替换原 Return 接口。
-// 若希望重复替换，应置于$.icalendar同级下。
-
-$.fn.icalendar.onReturn = function(date, dateObj, obj, calendar, a, selected){
-    var val = $(obj).val();
-    $(obj).val( selected.join(',') );
+$.fn.icalendar.callback = function(type, arg){
+    if(type == 'next_month'){
+        alert("goto:"+arg.year+"-"+arg.month);
+        $(arg.input).focus();
+    }
 }
 
 $(".time15").click(function(){
     var sel = returnSelect();
     $(this).icalendar({
-        show:1,
-        showMonths:1,
+        show:true,
+        viewmonths:1,
         selected:sel,
-        event:false
+        event:false,
+        onReturn:function(date, dateObj, obj, calendar, a, selected){
+            if(selected) $(obj).val( selected.join(',') );
+        }
     });
 });
-</textarea><br />
-<script type="text/javascript">
-    function returnSelect(){
-        var timeArr = $('.time15').val().split(',');
-        var sel = {};
-        for(x in timeArr){
-            if(timeArr[x]) sel[x] = {0:timeArr[x]};
-        }
-        return sel.length ? sel : true ;
-    }
-
-    $.fn.icalendar.onReturn = function(date, dateObj, obj, calendar, a, selected){
-        if(selected) $(obj).val( selected.join(',') );
-    }
-
-    $(".time15").click(function(){
-        var sel = returnSelect();
-        $(this).icalendar({
-            show:1,
-            showMonths:1,
-            selected:sel,
-            event:false
-        });
-    });
-
 </script>
-
-
-
 
 </body>
 </html>

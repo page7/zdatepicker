@@ -1,78 +1,94 @@
-<h2>icalendar - a Jquery plugin that easy to develop and use.</h2>
+<h2>icalendar - a Jquery datepicker plugin that easy to develop and use.</h2>
 
-<h3>演示地址</h3>
+<h3>中文地址</h3>
 <a href="http://www.pt-framework.com/project/icalendar/">点击这里</a>
 <br />
 
-<h3>提问留言</h3>
-<a href="http://www.pt-framework.com/blog/?page_id=171">点击这里</a>
-<br />
 
-<h3>版本更新</h3>
+<h3>Change Log</h3>
+
+<h4>3.0.0</h4>
+Date：2013-03-25<br />
+Contributor：<a href="http://www.nolanchou.com" target="_blank">page7</a><br />
+    　1.Fix bug.<br />
+    　2.Optimize: rewrite 40%+ code.<br />
+	　3.Add: add callback about select_year / select_month / next_month ...
+	　4.Update: change note and demo for English.
+	　5.Update: change options's name.
+	　6.Update: add option:onReturn.
+	　7.Update: not be compatible for lower version.
+<br />
 
 <h4>2.1</h4>
-时 间：2013-03-25<br />
-发 布：<a href="mailto:zhounan0120@gmail.com">page7</a><br />
-    　1.更新：恢复了传出多项选择的参数:selected（见案例15）。<br />
+Date：2013-03-25<br />
+Contributor：page7<br />
+    　1.Fix bug：multiple. option - selected (demo:15)<br />
 <br />
+
 <h4>2.0.1</h4>
-时 间：2013-03-12<br />
-发 布：<a href="mailto:ilove908402777@gmail.com">feng</a> / page7<br />
-    　1.更新：增加了对日历月份的控制。<br />
-    　2.优化：优化了DOM选择器。<br />
-    　3.优化：优化文本替换的效率。<br />
-    　4.更新：增加min版本下载。<br />
-    　5.注释：该版本可向下兼容。<br />
+Date：2013-03-12<br />
+Contributor：<a href="mailto:ilove908402777@gmail.com">feng</a> / page7<br />
+    　1.Add：Click month's link to change month like change year.<br />
+    　2.Optimize：Some dom selector.<br />
+    　3.Optimize：Efficiency about date format.<br />
 <br />
+
 <h4>1.0.7</h4>
-时 间：2012-06-21<br />
-发 布：page7<br />
-    　1.更新：增加use属性，用于直接利用页面中的DOM生成日历，而不必创建DOM。<br />
-    　2.更新：启用replace属性，可使用{'2014-1-1':'今天'}数据形式替换日期（见案例16）。<br />
+Date：2012-06-21<br />
+Contributor：page7<br />
+    　1.Add：Use a dom to be filled the datepicker. option - use. <br />
+    　2.Add：Replace a date to a text. eg: 2014-1-1 => Today. option - repleace, eg:{'2014-1-1':'Today'} (demo:16).<br />
 <br />
+
 <h4>1.0.6</h4>
-时 间：2012-06-13<br />
-发 布：page7<br />
-    　1.更新：文档说明改为php，动态展示时间。<br />
-    　2.修正：selected默认值恢复为false，解决初始选区无效问题。<br />
+Date：2012-06-13<br />
+Contributor：page7<br />
+    　1.Update：Use php in demo.<br />
+    　2.Fix bug：Set option - selected default value to false.<br />
 <br />
+
 <h4>1.0.5</h4>
-时 间：2012-03-30<br />
-发 布：page7<br />
-    　1.更新：当有selected属性时，优先读取selected。<br />
-    　2.更新：无事件触发，可结合show:true属性，自定绑定事件。<br />
-    　3.更新：增加综合实例，Return输出接口实例（见案例15）。<br />
-    　4.修正：将 Return 与 CallBack 函数外置，解决循环重定义现象。<br />
-    　5.修正: 修正部分DOM无value属性或value为数组产生的意外错误。<br />
+Date：2012-03-30<br />
+Contributor：page7<br />
+    　1.Update：If set option - selected, load selected values first。<br />
+    　2.Update：option - event is empty that be allow.<br />
+    　3.Add：Add a demo about plugin's method onReturn (demo:15).<br />
+    　4.Add：Rewrite icalendar.onReturn or icalendar.callback to do sth for date or dom.<br />
+    　5.Fix bug: Fix bug about the input that not have attr "value" or value is a array join by ",".<br />
 <br />
+
 <h4>1.0.4</h4>
-时 间：2011-10-21<br />
-发 布：page7<br />
-    　1.更新：提供了新的输出输入资料格式化，如：“2011年11月12日” “11/12/2011” 等。（见案例14）<br />
-    　2.更新：提供了年份转换公式：year2str 和反转换公式：str2year。用于民国/朝代/特殊纪年，注意此两个函数必须同时存在。<br />
-    　3.优化：优化了部分冗余代码。<br />
-    　4.修正：改正了部分微小错误。<br />
+Date：2011-10-21<br />
+Contributor：page7<br />
+    　1.Add：[option:format{date,month,year,onlymonth}], eg：“2011-Jun-1” “11/12/2011”...(demo:14)<br />
+    　2.Add：two callback function's options：[option:year2str] and [option:str2year]. Use for special era like taiwan or japan's old era.<br />
+    　3.Optimize：Remove redundant code.<br />
+    　4.Fix bug.<br />
 <br />
+
 <h4>1.0.3</h4>
-时 间：2011-09-18<br />
-发 布：page7<br />
-    　1.修正：修正了月份出现0月份的重大BUG。PS.这个问题很早就改掉了，忘记上传，对不起观众。<br />
+Date：2011-09-18<br />
+Contributor：page7<br />
+    　1.Fix bug：About month 0.<br />
 <br />
+
 <h4>1.0.2</h4>
-时 间：2011-09-09<br />
-发 布：page7<br />
-    　1.优化：增强了动态选区部分的UI问题：若area参数为jquery对象，新选择日期无法组成时间段区域，则清空该jquery对象，重新选择区间。（见案例5-1）<br />
-    　2.修正：删除了不必要的初始化时数据存储(domdate,seleced)<br />
-    　3.修正：增加了动态数据的存储，修正切换月份、年份时已选数据的丢失。<br />
-    　4.发现：selected属性，暂时无法使用数组<br />
-    　5.优化：优化年份选择的代码重复<br />
+Date：2011-09-09<br />
+Contributor：page7<br />
+    　1.Update：Change some UI and select area scheme. (demo:5-1)<br />
+    　2.Update：Delete some useless option value when init.<br />
+    　3.Update：Load value every times not once.
+	  4.Fix bug：Fix bug about missing data of user change when choose a new year / month.<br />
+    　5.Optimize：Change year's code.<br />
 <br />
+
 <h4>1.0.1</h4>
-时 间：2011-09-01<br />
-发 布：page7<br />
-    1.修正：修正了事件冲突，解决外部无法设置对象blur事件问题<br />
+Date：2011-09-01<br />
+Contributor：page7<br />
+    1.Fix bug：fix event conflicts about "blur".<br />
 <br />
+
 <h4>1.0.0</h4>
-时 间：2011-08-27<br />
-发 布：page7<br />
-    正式发布！<br />
+Date：2011-08-27<br />
+Contributor：page7<br />
+    release!<br />

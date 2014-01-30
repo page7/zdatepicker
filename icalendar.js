@@ -1,698 +1,770 @@
-//传说中的时间插件
 /*!
- * ICalendar (Calendar Plug-in for jQuery)  v2.1
- * http://www.interidea.org/
+ * icalendar (a smaller and easier datepicker of jquery plugin.)
+ * http://www.nolanchou.com/icalendar
+ * https://github.com/page7/icalendar
  *
  * Dual licensed under the MIT or GPL Version 2 licenses.
  * http://jquery.org/license
  *
- * Date: Fri Mar 19 00:00:00 2013 -0500
+ * Version:3.0.0
+ * Date:2014-01-30
  */
 
 ;(function ($) {
 
-$.fn.icalendar = function(options){
+$.fn.icalendar = function(options) {
 
-    $.fn.icalendar.defaults = {
-        className  : "icalendar",
-        event      : "click",
-        showMonths : 2,
-        startDate  : null,
-        symbiont   : false,
-        readonly   : false,
-        disable    : {},
-        area       : {},
-        selected   : false,          //v1.0.6 修正上次错误定义
-		show       : null,
-        closeButton : false,
-        pos        : {},
-        format     : {date:"Ｙ-ｍ-ｄ",month:"Ｙ-ｍ",year:"Ｙ年",onlymonth:"ｍ月"}, //v1.0.4 全角 v2.0.1 追加onlymonth
-        day_str    : ["日","一","二","三","四","五","六"],
-        month_str  : ["1","2","3","4","5","6","7","8","9","10","11","12"],
-        year2str   : null,
-        str2year   : null,
-        replace    : null,    //v1.0.7 日期替换，用于特殊日期
-        use        : false    //v1.0.7 直接利用已有元素进行扩展，若为true，则根据className调用
-    };
+	$.fn.icalendar.defaults = {
+		classname	: "icalendar",
+		event		: "click",
+		viewmonths	: 2,
+		format		: {date:"yyyy-mm-dd",month:"yyyy-mm",year:"yyyy",onlymonth:"mm"}, //only support: yyyy-2014, mm-monthstr, dd-01. 1 digital date / 2 digital year / week please use "onReturn" to format.
+		daystr		: ["Sun","Mon","Tue","Wed","Thur","Fri","Sat"],
+		monthstr	: ["01","02","03","04","05","06","07","08","09","10","11","12"],
+		year2str	: null,
+		str2year	: null,
+		initmonth	: null,
+		symbiont	: true,
+		readonly	: false,
+		disable		: {},	   // disable, area, selected must use 1970-1-1 or 1970-01-01 string format.
+		area		: {},
+		selected	: false,
+		replace		: null,
+		pos			: {},
+		use			: false,  // use option must be a jquery selector string. eq : #id or .class ..
+		show		: null,
+		closebtn	: false,
+		onReturn	: null,
+	};
 
-    //debug mode
-    var debug = 0;
-
+    var _init = false;
 
 	var opts = $.extend({}, $.fn.icalendar.defaults, options);
 
-    //记录已选择点  *切换月份使用
-    var selected = [];
+	// record input's values
+	var selected = [];
 
-    //记录最后选择的值 *切换月份时使用    v1.0.2 删除domdate
-    var lastSelected = "";
+	// record last select
+	var lastSelected = "";
 
+	// record view mode
+	var view = [];
 
-    //格式化成数组形式
-    var toArray = function(value){
-        if(!value) return "";
-        switch(typeof(value)){
-            case "number":
-                var temp = new Date();
-                temp.setTime(value);
-                value = [temp.getFullYear(), temp.getMonth()+1, temp.getDate()];
-                break;
-            case "string":
-                value = value.split("-");
-                break;
-            case "object":
-                if(!$.isArray(value)){
-                    if(value.getTime){
-                        value = [value.getFullYear(), value.getMonth()+1, value.getDate()];
-                    }else{
-                        value = getDomVal(value);
-                    }
-                }
-                break;
-            case "function":
-                value = value();
-                return toArray(value);
-        }
-        if(value.length != 3 || !parseInt(value[0],10) || !parseInt(value[1],10) || !parseInt(value[2],10)) return "";
-        return [parseInt(value[0],10), parseInt(value[1],10), parseInt(value[2],10)];
-    }
-    //o
+	// record last view click data
+	var viewChange = [];
+
+	// record all calendar
+	var _calendars = [];
 
 
-    // 获取 Dom 值/内容 格式不正确返回空
-    var getDomVal = function(obj){
-        var value = $(obj).val();
-        var html = $(obj).html();
-        if(!value && html) value = html;
-        value = regStr(value);
-        if(value.length != 3 || !parseInt(value[0],10) || !parseInt(value[1],10) || !parseInt(value[2],10)) return "";
-        return value;
-    }
-    //o
+	// format to a date string's array.
+	var toArray = function(value) {
 
+		switch(typeof(value)) {
+			case "number":
+				var temp = new Date();
+				temp.setTime(value);
+				value = [temp.getFullYear(), temp.getMonth()+1, temp.getDate()];
+				break;
 
-    //通过正则恢复字符串内容 v1.0.4
-    var regStr = function(str){
-        if(typeof(str) !== 'string') return ''; //v1.0.5
-        var pos = [];
-        var format = opts.format.date;
-        if(format.search("Ｙ") != -1) pos[format.search("Ｙ")] = "Y";
-        if(format.search("ｍ") != -1) pos[format.search("ｍ")] = "m";
-        if(format.search("ｄ") != -1) pos[format.search("ｄ")] = "d";
-        var regs = "/"+ format.replace(/[Ｙｍｄ]/g, "(\\S*)") +"/";
-        var re = eval(regs);
-        var data = str.match(re);
-        if(data){
-            //输出
-            var date = [];
-            var i = 1;
-            for(x in pos){
-                if(pos[x] == "Y") date[0] = parseInt( opts.str2year ? opts.str2year(data[i]) : parseInt(data[i],10) , 10);
-                if(pos[x] == "m"){ date[1] = $.inArray(data[i], opts.month_str) + 1;}
-                if(pos[x] == "d") date[2] = parseInt(data[i],10);
-                i++;
-            }
-            return date;
-        }else{
-            return "";
-        }
-    }
-    //o
+			case "string":
+				var value = value.split("-");
+				for(var x in value) {
+					value[x] = parseInt(value[x], 10);
+					if(!value[x]) return [];
+				}
+				break;
 
+			case "object":
+				if(!$.isArray(value)) {
+					if(value.getTime){
+						value = [value.getFullYear(), value.getMonth()+1, value.getDate()];
+					}else{
+						value = getDomVal(value);
+					}
+				}
+				break;
 
-    //将时间格式转成输出内容
-    var date2str = function(date){
-        date = toArray(date);
-        if(date)
-        {
-            var string = opts.format.date;
-            string = string.replace(/[Ｙ]/g, (opts.year2str ? opts.year2str(date[0]) : date[0]));
-            string = string.replace(/[ｍ]/g, (opts.month_str[date[1]-1]));
-            string = string.replace(/[ｄ]/g, date[2]);
-            return string;
-        }else{
-            return "";
-        }
-    }
-    //o
-
-
-    // 根据时间，提供标准Date对象 ( 输入月份为 1 to 12 )
-    var getDateObj = function(year, month, date){
-        var temp = new Date();
-        temp.setFullYear(parseInt(year,10), parseInt(month,10)-1, parseInt(date,10));
-        temp.setHours(0,0,0,0);
-        return temp;
-    }
-    //o
-
-
-    //check date in date's area(areaObj)
-    var inArea = function(year, month, day, areaObj){
-        if(typeof(areaObj) == "function")
-            areaObj = areaObj();
-        for(x in areaObj){
-            var start = typeof(areaObj[x])=="string" ? toArray(areaObj[x]) : toArray(areaObj[x][0]);
-            start = getDateObj(start[0], start[1], start[2]);
-            if(areaObj[x][1] === undefined || typeof(areaObj[x])=="string"){
-                end = start;
-            }else{
-                var end = toArray(areaObj[x][1]);
-                end = getDateObj(end[0], end[1], end[2]);
-            }
-            var now = getDateObj(year, month, day);
-
-            if(start.getTime() <= now.getTime() && now.getTime() <= end.getTime())
-                return true;
-        }
-        return false;
-    }
-    //o
-
-    //检测是否构成时间段
-    var isArea = function(year, month, day, area){
-        var area = area ? area : opts.area;
-        if(!area || (!area[0] && !area[1])) return;
-        var start = toArray(area[0]);
-        var end = toArray(area[1]);
-        var sel = toArray(lastSelected);
-        if(!start){ start = sel ? sel : end};
-        if(!end){ end  = sel ? sel : start};
-
-        if(!start && !end) return;
-        start = getDateObj(start[0], start[1], start[2]);
-        end = getDateObj(end[0], end[1], end[2]);
-
-        if(start.getTime() > end.getTime()) return false;
-        //检测该段是否能够形成区域
-        if(!checkArea(start, end)) return false;
-        //判断
-        var now = getDateObj(year, month, day);
-
-        return (start.getTime() <= now.getTime() && now.getTime() <= end.getTime());
-    }
-    //o
-
-
-    //选择区间是否成立
-    var checkArea = function(start, end){
-        for(var i = start.getTime(); i <= end.getTime(); i = i+24*3600*1000){
-            var temp = new Date();
-            temp.setTime(i);
-            if(inArea(temp.getFullYear(), temp.getMonth()+1, temp.getDate(), opts.disable))
-                return false;
-        }
-        return true;
-    };
-    //o
-
-    //v1.0.7 替换日期符号
-    var dateReplace = function(year, month, day){
-        switch(typeof(opts.replace)){
-            case "object":
-                if(opts.replace && opts.replace[year+"-"+month+"-"+day] !== undefined){
-                    return opts.replace[year+"-"+month+"-"+day];
-                }
-                break;
-            case "function":
-                return opts.replace(year, month, day);
-        }
-        return day;
-    }
-    //o
-
-    //初始化selected函数，对象转数组
-    var initSelect = function(areaObj){
-        for(x in areaObj){
-            //起点
-            var start = toArray(areaObj[x][0]);
-            //终点
-            if(areaObj[x][1] !== undefined){
-                start = getDateObj(start[0], start[1], start[2]);
-                var end = toArray(areaObj[x][1]);
-                end = getDateObj(end[0], end[1], end[2]);
-                for(var i=start.getTime(); i<=end.getTime(); i=i+24*3600*1000){
-                    var t = toArray(i);
-                    selected.unshift(t[0] + "-" + t[1] + "-" + t[2]);
-                }
-            }else{
-                selected.unshift(start[0] + "-" + start[1] + "-" + start[2]);
-            }
-        }
-    }
-    //o
-
-
-    //建立日历内容区
-    var buildCalendar = function(obj){
-        //定义日历dom
-        if(!opts.use){
-            var calendar = $(obj).next("."+opts.className);
-        }else{
-            var calendar = (opts.use === true) ? $("."+opts.className).eq(0) : $(opts.use).eq(0);
-        }
-
-        //获取已填日期
-        var date = getDomVal(obj);
-
-        if(!date || opts.selected){  //v1.0.5
-            initSelect($.extend( {}, opts.selected ));
-            date = new Date();
-            lastSelected = null;
-            date = new Array(date.getFullYear(), date.getMonth()+1, date.getDate());
-        }else{
-            lastSelected = date.join("-");
-            initSelect($.extend( {0:{0:lastSelected}}, opts.selected )); //v1.0.2修正
-        }
-
-        //设定起始第一栏日期
-        if(opts.startDate){
-            var setStart = toArray(opts.startDate);
-            if(setStart) date = setStart;
-        }
-
-        var year = date[0];
-        var month = date[1];
-        var day = date[2];
-
-        //生成数据
-        _build(obj, calendar, year, month);
-
-        //设置宽度
-        calendar.width($(obj).data("ic_width") * opts.showMonths);
-        //设置位置
-        var top = opts.pos.top == "bottom" ? (-calendar.outerHeight()-$(obj).outerHeight()) : parseInt(opts.pos.top ? opts.pos.top : 0 );
-        var left = opts.pos.left == "right" ? (-calendar.outerWidth()+$(obj).outerWidth()) : parseInt(opts.pos.left ? opts.pos.left : 0);
-        calendar.css({
-            top : parseInt($(obj).position().top + $(obj).outerHeight() + top) + "px",
-            left : parseInt($(obj).position().left + left) + "px"
-        });
-        //层
-        calendar.css("z-index", new Date().getTime().toString().slice(-7,-3));
-
-        //关闭其他dom
-        if(opts.symbiont == false) $("."+opts.className).hide();
-        if(opts.show !== false) calendar.show();
-
-        $(obj).blur(function(){
-            if( !calendar.data("foc") ) calendar.hide();
-        });
+			case "function":
+				value = value();
+				value = toArray(value);
+				break;
+		};
+		return value;
 	};
-    //over
-
-
-    //填充日历，并添加事件   v1.0.2
-    var _build = function(obj, calendar, year, month){
-
-        calendar.html("");
-        for(var i = 1; i<=opts.showMonths; i++){
-            if(month+i-1 > 12){ year++; month = month - 12;}
-            var main = getDate(year, month+i-1);
-            var prev = i==1 ? "<a href=\"javascript:;\">&lt;</a>" : '<span class="empty">&nbsp;</span>';
-            var next = i==opts.showMonths ? "<a href=\"javascript:;\">&gt;</a>" : '<span class="empty">&nbsp;</span>';
-            // 不解，year和(month+i-1)就可以获取时间了 - -|| -feng
-            // 鄙视 = =|| 看案例14-2 -page7
-            var title = opts.format.month;
-            title = title.replace(/[Ｙ]/g, "<a href=\"javascript:;\">"+(opts.year2str ? opts.year2str(year) : year)+"</a>");
-            title = title.replace(/[ｍ]/g, "<a href=\"javascript:;\">"+(opts.month_str[month+i-2])+"</a>");
-            calendar.append("<dl><dt>"+prev+"<span id=\"ic_"+year+"-"+(month+i-1)+"\">"+title+"</span>"+next+"</dt><dd>"+main+"</dd></dl>");
-        }
-        if(opts.closeButton) calendar.append('<dl class="close"><a href="javascript:;">x</a></dl>');
-
-        addEvent(obj, calendar);
-
-        //prev month
-        calendar.find("dt a:first").unbind("click").click(function(){
-            goMonth(-1, obj, calendar);
-            addEvent(obj, calendar);
-            $(obj).focus();
-        });
-
-        //next month
-        calendar.find("dt a:last").unbind("click").click(function(){
-            goMonth(1, obj, calendar);
-            addEvent(obj, calendar);
-            $(obj).focus();
-        });
-    }
-    //o
-
-
-    // 事件委派
-    var addEvent = function(obj, calendar){
-        //不自动关闭
-        calendar.find("span,a").mouseout(function(){ calendar.data("foc", opts.symbiont ? true : false); });
-        calendar.find("span,a").mouseover(function(){ calendar.data("foc", true); });
-        if(opts.symbiont) calendar.data("foc", true);
-
-        //any other
-        calendar.find("span").click(function(){$(obj).focus();});  //v1.01
-
-        //change month -feng
-        calendar.find("dt > span > a:last-child").unbind("click").click("click", function(){   //v2.0
-            monthList(calendar, obj, $(this).parent());
-        });
-
-        //change year -feng
-        calendar.find("dt > span > a:first-child").unbind("click").bind("click", function(){  //v2.0
-            yearList(calendar, obj, $(this).parent());
-            //触发对象由span 改成 span下的 a ，即年的位置
-        });
-
-
-        //close
-        calendar.find(".close > a").click(function(){
-            calendar.hide();
-            $.fn.icalendar.callback("close", {date:"", dateobj:"", obj:obj, calendar:calendar, a:calendar.find("selected").get()});
-        });
-
-
-        //return
-        calendar.find("dd > :not(.close) > a").unbind("click").click(function(){
-            var select = true;
-            if( $.isEmptyObject(opts.selected) && opts.selected !== true ) {
-                calendar.find(".selected").removeClass("selected");
-                select = false;
-            }
-            $(this).toggleClass("selected");
-
-            var date = $(this).closest("dl").find("dt > span:not(.empty)").attr("id").substr(3) + "-" + $(this).html();
-            var dateobj = toArray(date);
-            dateobj = getDateObj(dateobj[0], dateobj[1], dateobj[2]);
-            date = date2str(date);
-
-            // v1.0.2
-            lastSelected = $(this).is(".selected") ? date : null;
-            if(select) {
-                if($(this).is(".selected")){
-                    selected.unshift(date);
-                }else{
-                    selected = $.map(selected, function(n){
-                        return n != date ? n : null;
-                    });
-                }
-            }else{
-                selected = new Array(date);
-            }
-
-            //focus
-            $(obj).focus();
-
-            if($.isEmptyObject(opts.area)){
-                $.fn.icalendar.onReturn(date, dateobj, obj, calendar, this, selected);
-            }else{
-                if(!opts.area[0]) {
-                    var newArea = {0:date, 1:opts.area[1]};
-                    changeArea("start", newArea, date, dateobj, obj, calendar, this);
-                }else{
-                    var newArea = {0:opts.area[0], 1:date};
-                    changeArea("end", newArea, date, dateobj, obj, calendar, this);
-                }
-            }
-
-        });
-    }
-    //over
-
-
-    //生成年份列表
-    var yearList = function(calendar, obj, but){
-        var year = $(but).attr("id").substr(3).split('-');
-        year = parseInt(year[0], 10);
-        var dl = $(but).closest("dl");
-        var nowstart = Math.floor((year - 4)/12) * 12 + 4;
-        var nowend = nowstart + 12;
-        var nowi = dl.prevAll("dl").length;
-        gotoYear(calendar, obj, nowstart, nowend, nowi);
-
-        //prev year
-        calendar.find("dt > a:eq(0)").unbind("click").click(function(){
-            var year = $(this).closest("dt").find("span:not(.empty)").attr("id").substr(3).split('-');
-            start = parseInt(year[0], 10) - 12;
-            gotoYear(calendar, obj, start, start+12, 0);
-            $(obj).focus();
-        });
-
-        //next year
-        calendar.find("dt > a:eq(1)").unbind("click").click(function(){
-            var year = $(this).closest("dt").find("span:not(.empty)").attr("id").substr(3).split('-');
-            start = parseInt(year[0], 10) + 12;
-            gotoYear(calendar, obj, start, start+12, calendar.children("dl:not(.close)").length-1);
-            $(obj).focus();
-        });
-    }
-    //o
-
-
-    //年份跳转
-    var gotoYear = function(calendar, obj, nstart, nend, n){
-        calendar.children("dl").each(function(i){
-            var start = (nstart+(i-n)*12);
-            var end = (nend+(i-n)*12)-1;
-            var title = opts.format.year.replace(/[Ｙ]/g, (opts.year2str ? opts.year2str(start) : start)) +
-                         "-" + opts.format.year.replace(/[Ｙ]/g, (opts.year2str ? opts.year2str(end) : end));
-            $(this).find("dt > span:not(.empty)").attr("id", "ic_"+start+"-"+end).html( title );
-            var main = '';
-            for(var j = start; j <= end; j++){
-                title = opts.format.year.replace(/[Ｙ]/g, (opts.year2str ? opts.year2str(j) : j));
-                main += '<span class="year"><a id="ic_'+j+'" href="javascript:;">'+title+'</a></span>';
-            }
-            $(this).find("dd").html(main);
-        });
-
-        calendar.find("span,a").mouseout(function(){ calendar.data("foc", opts.symbiont ? true : false); });
-        calendar.find("span,a").mouseover(function(){ calendar.data("foc", true); });
-        if(opts.symbiont) calendar.data("foc", true);
-
-        calendar.find("dd > :not(.close) > a").unbind("click").click(function(){
-            var year = parseInt($(this).attr("id").substr(3), 10);
-            var month = 6;
-            _build(obj, calendar, year, month);
-            $(obj).focus();
-        });
-    }
-    //o
-
-
-    //生成月份份列表 -feng  v2.0
-    var monthList = function(calendar, obj, but){
-        var date = $(but).attr("id").substr(3).split('-');
-        var year = parseInt(date[0], 10);
-        var dl = $(but).closest("dl");
-        var nowi = dl.prevAll("dl").length;
-        gotoMonth(calendar, obj, year, nowi);
-
-        //prev year
-        calendar.find("dt > a:eq(0)").unbind("click").click(function(){
-            var year = parseInt($(this).closest("dt").find("span:not(.empty)").attr("id").substr(3), 10) - 1;
-            if(year <= 0){ year = 1; }
-            gotoMonth(calendar, obj, year, nowi);
-            $(obj).focus();
-        });
-
-        //next year
-        calendar.find("dt > a:eq(1)").unbind("click").click(function(){
-            var year = parseInt($(this).closest("dt").find("span:not(.empty)").attr("id").substr(3), 10) + 1;
-            gotoMonth(calendar, obj, year, nowi);
-            $(obj).focus();
-        });
-    }
-    //o
-
-
-    //月份跳转 -feng v2.0
-    var gotoMonth = function(calendar, obj, nowyear, n){
-        calendar.children("dl").each(function(i){
-            nowyear += i;
-            var start = 1;
-            var end = 12;
-            var title = opts.format.year.replace(/[Ｙ]/g, "<a href=\"javascript:;\">"+(opts.year2str ? opts.year2str(nowyear) : nowyear)+"</a>"); // -page v2.0.1
-            $(this).find("dt span:not(.empty)").attr("id", "ic_"+nowyear).html( title );
-            var main = '';
-            for(var j = start; j <= end; j++){
-                var mstr = opts.format.onlymonth.replace(/[ｍ]/g, opts.month_str[j-1]);
-                main += '<span class="month"><a id="ic_'+j+'" href="javascript:;">'+mstr+'</a></span>';
-            }
-            $(this).find("dd").html(main);
-        });
-
-        //change year
-        calendar.find("dt > span > a:first-child").unbind("click").bind("click", function(){
-            yearList(calendar, obj, $(this).parent());
-        });
-
-        calendar.find("span,a").mouseout(function(){ calendar.data("foc", opts.symbiont ? true : false); });
-        calendar.find("span,a").mouseover(function(){ calendar.data("foc", true); });
-        if(opts.symbiont) calendar.data("foc", true);
-
-        calendar.find("dd :not(.close) a").unbind("click").click(function(){
-            var year = parseInt($(this).closest("dl").find("dt span:not(.empty)").attr("id").substr(3), 10);
-            var month = parseInt($(this).attr("id").substr(3), 10);
-            _build(obj, calendar, year, month);
-            $(obj).focus();
-        });
-    }
-    //o
-
-
-    // 生成单月份日期列表
-    var getDate = function(year, month){
-        //获取当月1日
-        var temp = getDateObj(year, month, 1);
-        var day = temp.getDay();
-        //添加星期
-        var main = '<div>';
-        for(var i=0; i<=6; i++)
-            main += '<span class="week'+i+'">'+opts.day_str[i]+'</span>';
-        main += '</div>';
-        for(var i=1; i<=day; i++){
-            var week = i % 7;
-            main += '<span class="empty week'+week+'"><span>&nbsp;</span></span>';
-        }
-        //获取月份天数
-        var days = 0;
-        if((month<=7 && (month%2==1)) || (month>7 && (month%2==0))){
-            days=31;
-        }else{
-            if(month==2 && year%4==0){ days=29 }else if(month==2){ days=28 }else{ days=30; }
-        }
-        //读取当前时间
-        for(var i=1; i<=days; i++)
-        {
-            var dis =  inArea(year, month, i, opts.disable);
-            var cla = "week" + ((day + i -1) % 7);
-            cla +=  inArea(year, month, i, selected) ? ' selected' : '';
-            cla +=  dis ?  ' disable' : '';
-            cla +=  isArea(year, month, i) ? ' area' : '';
-            cla = 'class="'+cla+'"';
-            var str = dateReplace(year, month, i);
-            if(opts.readonly || dis)
-                main += '<span class="day"><span '+cla+'>'+str+'</span></span>';
-            else
-                main += '<span class="day"><a '+cla+' href="javascript:;">'+str+'</a></span>';
-        }
-        //if(((day+days)%7) != 0)
-        for(var i=1; i<=7-((day+days)%7); i++)
-            main += '<span class="empty"><span>&nbsp;</span></span>';
-        return main;
-    }
-    //o
-
-
-    //月份翻页 v1.0.3 优化代码
-    var goMonth = function(num, obj, calendar){
-        var date = calendar.find("dl:eq(0) dt span:not(.empty)").attr("id").substr(3).split("-");
-        var year = parseInt(date[0], 10);
-        var month = parseInt(date[1], 10);
-        var temp = getDateObj(year, month, 1);
-        if( month + num < 1 ){  // v1.0.3
-            year = year - Math.ceil((month + num)/12) - 1;
-            month = 12 + (month + num);
-        }else if(month + num > 12){
-            year  =  year + Math.ceil((month + num)/12) - 1;
-            month = (month + num)-12;
-        }else{
-            month = month + num;
-        }
-        _build(obj, calendar, year, month);
-    }
-    //over
-
-
-    //选择区域使用的函数
-    var changeArea = function(type, newArea, date, dateObj, obj, calendar, a){
-        newArea[0] = toArray(newArea[0]);
-        newArea[1] = toArray(newArea[1]);
-        //初始日期值为空
-        if((type == 'end' && newArea[0] == '') || (type == 'start' && newArea[1] == '')){
-            calendar.find(".area").removeClass("area");
-            $(a).addClass("area");
-            $.fn.icalendar.onReturn(date, dateObj, obj, calendar, a, selected);
-            return;
-        }
-        //都为空
-        if(!newArea[1] || !newArea[0] || (newArea[0] == newArea[1] && newArea[0] != '')) return;
-        //当前时间是否在原时间段内
-        if(!isArea(dateObj.getFullYear(), dateObj.getMonth()+1, dateObj.getDate(), newArea)){
-            $(a).removeClass("selected");
-            calendar.find(".area").last().addClass("selected");
-            $.fn.icalendar.callback("changeError", {date:date, dateobj:dateObj, obj:obj, calendar:calendar, a:a});
-            //不在时间段内，根据给定的设置，判断是否清空其数据 v1.0.2
-            for(var i=0; i<=1; i++){
-                if(opts.area[i] !== undefined && opts.area[i] && opts.area[i].get && opts.area[i].get()){
-                    opts.area[i].val('');
-                    calendar.find(".selected").removeClass("selected");
-                    calendar.find(".area").removeClass("area");
-                    $(a).addClass("selected area");
-                    $.fn.icalendar.onReturn(date, dateObj, obj, calendar, a, selected);
-                }
-            }
-        }else{
-            calendar.find(".selected").removeClass("selected");
-            $(a).addClass("selected area");
-            var dl = $(a).closest("dl");
-            if(type == 'end'){
-                dl.nextAll("dl").find(".area").removeClass("area");
-                dl.prev("dl").find("span:has(.area)").eq(0).nextAll().children("a").addClass("area");
-                $(a).parent().nextAll(":has(.area)").children("a").removeClass("area");
-                if(newArea[0].join("-") != date) $(a).parent().prevUntil(":has(.area)").children("a").addClass("area");
-            }else{
-                dl.prevAll("dl").find(".area").removeClass("area");
-                dl.next("dl").find("span:has(.area)").eq(0).prevAll(a).children("a").addClass("area");
-                $(a).parent().prevAll(":has(.area)").children("a").removeClass("area");
-                if(newArea[1].join("-") != date) $(a).parent().nextUntil(":has(.area)").children("a").addClass("area");
-            }
-            $.fn.icalendar.onReturn(date, dateObj, obj, calendar, a, selected);
-        }
-    }
-    //over
 
 
 
+	// Get dom value or content
+	var getDomVal = function(dom) {
+		var obj = $(dom);
+		if(!obj.is("input"))
+			var value = obj.text();
+		else
+			var value = obj.val();
 
-    //初始化函数
-    var _initialize = function(d){
-        if(!opts.use){
-            $(d).next("."+opts.className).remove();
-            $(d).after('<div class="'+opts.className+'"></div>');//外层dl换为div -feng  v2.0
-            var c = $(d).next("."+opts.className);
-            $(d).data("ic_width", c.width());
-        }
-
-        //v2.0.1 向下兼容 -page7
-        if(options !== undefined && options.format !== undefined)
-            opts.format = $.extend({}, $.fn.icalendar.defaults.format, options.format);
-
-    }
-    //over
+		return regStr(value);
+	};
 
 
-    //init obj
-    return this.each(function(){
 
-        _initialize(this);
+	// Use regular to get value in string
+	var regStr = function(str) {
+		if(typeof(str) !== 'string') return [];
+		var pos = [];
+		var format = opts.format.date;
+		pos[format.search("yyyy")] = "y";
+		pos[format.search("mm")] = "m";
+		pos[format.search("dd")] = "d";
+		var regs = format.replace(/yyyy/, "(\S*)").replace(/mm/, "(\S*)").replace(/dd/, "(\S*)"); //console.log(regs);
+		var re = new RegExp(regs);
+		var data = str.match(re);
+		if(data){
+			var date = [];
+			var i = 1;
+			for(var x in pos){
+				switch(pos[x]){
+					case "y":
+						date[0] = parseInt( (opts.str2year ? opts.str2year(data[i]) : parseInt(data[i], 10)), 10);
+						break;
+					case "m":
+						date[1] = $.inArray(data[i], opts.monthstr) + 1;
+						// support number only
+						if(date[1] == 0) date[1] = $.inArray("0"+data[i], opts.monthstr) + 1;
+						if(date[1] == 0) return [];
+						break;
+					case "d":
+						date[2] = parseInt(data[i], 10);
+						break;
+				}
+				i++;
+			}
+			return date;
+		}else{
+			return [];
+		}
+	};
 
-        if(opts.show == true) buildCalendar(this);
 
-        //v1.0.5 增加无事件触发
-        if(opts.event) $(this).unbind(opts.event).bind(opts.event, function(){ buildCalendar(this); });
+	// Get a Date object
+	var getDateObj = function(arr) {
+		var temp = new Date();
+		temp.setFullYear(parseInt(arr[0],10), parseInt(arr[1],10)-1, parseInt(arr[2],10));
+		temp.setHours(0,0,0,0);
+		return temp;
+	};
 
-        return this;
-    });
+
+
+	// Check a date is in date ranges (rangeObj is array or obj)
+	var inRange = function(year, month, day, rangeObj) {
+
+		if(typeof(rangeObj) == "function")
+			rangeObj = rangeObj();
+
+		for(var x in rangeObj) {
+			var start = typeof(rangeObj[x]) == "string" ? toArray(rangeObj[x]) : toArray(rangeObj[x][0]);
+			if(!start.length) return false;
+
+			start = getDateObj(start);
+			if(typeof(rangeObj[x])=="string" || rangeObj[x][1] === undefined) {
+				end = start;
+			}else{
+				var end = toArray(rangeObj[x][1]);
+				if(!end.length) return false;
+
+				end = getDateObj(end);
+			}
+			var now = getDateObj([year, month, day]);
+
+			if(start.getTime() <= now.getTime() && now.getTime() <= end.getTime())
+				return true;
+		}
+
+		return false;
+	};
+
+
+
+	// Check out a date is in AREA ( a date range of option:area or user change )
+	// One icalendar only have one AREA.
+	// Generally, AREA is made up of this input's value and the other input's value.
+	var isArea = function(year, month, day, area) {
+		var area = area ? area : opts.area;
+		if(!area || (!area[0] && !area[1])) return false;
+
+		var start = toArray(area[0]);
+		var end = toArray(area[1]);
+		var sel = toArray(lastSelected);
+		if(!start.length) { start = sel ? sel : end };
+		if(!end.length) { end  = sel ? sel : start };
+
+		if(!start.length || !end.length) return false;
+
+		start = getDateObj(start);
+		end = getDateObj(end);
+
+		if(start.getTime() > end.getTime()) return false;
+
+		if(!checkArea(start, end)) return false;
+
+		var now = getDateObj([year, month, day]);
+
+		return (start.getTime() <= now.getTime() && now.getTime() <= end.getTime());
+	};
+
+
+
+	// Check out two dates that can make up a date range
+	// If any date that be disabled in this a date range, return false
+	var checkArea = function(start, end) {
+		for(var i = start.getTime(); i <= end.getTime(); i = i+24*3600*1000) {
+			var temp = new Date();
+			temp.setTime(i);
+			if(inRange(temp.getFullYear(), temp.getMonth()+1, temp.getDate(), opts.disable))
+				return false;
+		}
+		return true;
+	};
+
+
+	// Replace the date view string.
+	var dateReplace = function(year, month, day) {
+		switch(typeof(opts.replace)) {
+			case "object":
+				var key = _format('date', [year, month, day]);
+				if(opts.replace && opts.replace[key] !== undefined) {
+					return opts.replace[key];
+				}
+				break;
+			case "function":
+				return opts.replace(year, month, day);
+		}
+		return day;
+	};
+
+
+	// init option:selected value
+	var initSelect = function(rangeObj) {
+		for(var x in rangeObj) {
+
+			var start = toArray(rangeObj[x][0]);
+			if(!start.length) continue;
+
+			if(rangeObj[x][1] !== undefined) {
+				start = getDateObj(start);
+				var end = toArray(rangeObj[x][1]);
+				if(!end.length) continue;
+
+				end = getDateObj(end);
+				for(var i = start.getTime(); i <= end.getTime(); i = i+24*3600*1000) {
+					var t = toArray(i);
+					selected.unshift(t[0] + "-" + t[1] + "-" + t[2]);
+				}
+			}else{
+				selected.unshift(start[0] + "-" + start[1] + "-" + start[2]);
+			}
+		}
+	};
+
+
+	// init icalendar
+	var buildCalendar = function(obj) {
+		var input = $(obj);
+
+		// use a existing dom or create one ?
+		if(!opts.use) {
+			var calendar = input.next("."+opts.classname);
+		}else{
+			var calendar = (opts.use === true) ? $("."+opts.classname).eq(0) : $(opts.use).eq(0);
+		}
+		_calendars.push(calendar);
+
+		// get dom value
+		var date = getDomVal(obj);
+
+		if(!date.length || opts.selected) {
+			initSelect($.extend( {}, opts.selected ));
+			date = new Date();
+			lastSelected = null;
+			date = [date.getFullYear(), date.getMonth()+1, date.getDate()];
+		}else{
+			lastSelected = date.join("-");
+			initSelect($.extend( {0:{0:lastSelected}}, opts.selected ));
+		}
+
+		// set a month for display.
+		if(opts.initmonth) {
+			var setStart = toArray(opts.initmonth);
+			if(setStart.length) date = setStart;
+		}
+
+		var year = date[0];
+		var month = date[1];
+
+		// fill content
+		_build(obj, calendar, year, month, 'date');
+
+		// set width
+		calendar.width(input.data("ic_width") * opts.viewmonths);
+		// set position
+		var _outHeight = input.outerHeight();
+		var _outWidth = input.outerWidth();
+		var top = opts.pos.top == "bottom" ? (-calendar.outerHeight()-_outHeight) : parseInt(opts.pos.top ? opts.pos.top : 0 );
+		var left = opts.pos.left == "right" ? (-calendar.outerWidth()+_outWidth) : parseInt(opts.pos.left ? opts.pos.left : 0 );
+		calendar.css({
+			top : parseInt(input.position().top + _outHeight + top) + "px",
+			left : parseInt(input.position().left + left) + "px"
+		});
+		// set z-index
+		calendar.css("z-index", new Date().getTime().toString().slice(-7,-3));
+
+		if(opts.symbiont) $(_calendars).hide();	// close other icalendars
+		if(opts.show !== false) calendar.show();	// not need any event to show it
+
+		input.blur(function(){
+			if( !calendar.data("foc") ) calendar.hide();
+		});
+	};
+
+
+	// Format data to a string
+	// mode : date, month, year, onlymonth
+	// data : [year, month, date], [year, month], year, month
+	var _format = function(mode, data) {
+		switch(mode) {
+			case 'date':
+				var string = opts.format.date;
+					string = string.replace(/yyyy/, (opts.year2str ? opts.year2str(data[0]) : data[0]));
+					string = string.replace(/mm/, (opts.monthstr[data[1]-1]));
+					string = string.replace(/dd/, (data[2] < 10 ? "0"+data[2] : data[2]));
+				return string;
+			case 'month':
+				var string = opts.format.month;
+					string = string.replace(/yyyy/, '<a class="year" id="ic_y_'+data[0]+'" href="javascript:;">'+(opts.year2str ? opts.year2str(data[0]) : data[0])+"</a>");
+					string = string.replace(/mm/, '<a class="month" id="ic_m_'+data[1]+'" href="javascript:;">'+(opts.monthstr[data[1]-1])+"</a>");
+				return string;
+			case 'year':
+				return opts.format.year.replace(/yyyy/, (opts.year2str ? opts.year2str(data) : data));
+			case 'onlymonth':
+				return opts.format.onlymonth.replace(/mm/, opts.monthstr[data-1]);
+		}
+	}
+
+
+	// Fill content in icalendar
+	var _build = function(obj, calendar, year, month, mode) {
+
+		var _index = opts.viewmonths % 2 ? ((opts.viewmonths - 1) / 2) : (opts.viewmonths / 2 - 1);
+
+		calendar.html("");
+		for(var i = 1; i<=opts.viewmonths; i++) {
+
+			var prev = i==1 ? '<a class="prev" href="javascript:;">&lt;</a>' : '<span class="empty">&nbsp;</span>';
+			var next = i==opts.viewmonths ? '<a class="next" href="javascript:;">&gt;</a>' : '<span class="empty">&nbsp;</span>';
+
+			// build date picker
+			if(mode == 'date'){
+
+				var _month = month + i - 1;
+				if(_month > 12){ year++; _month = _month - 12; }
+				var title = _format('month', [year, _month]);
+
+				// get num of days in the month
+				var days = 0;
+				if((_month <= 7 && (_month % 2 == 1)) || (_month > 7 && (_month % 2 == 0))) {
+					days=31;
+				}else{
+					if(_month == 2 && year % 4 == 0)
+						days=29;
+					else if(_month == 2)
+						days=28;
+					else
+						days=30;
+				}
+
+				var main = _dateList(year, _month, days);
+
+				if(i == 1) {
+					view = ['date', year, _month];
+					viewChange = [year, _month];
+				}
+			}
+			// build month picker
+			else if(mode == 'month') {
+				var _year = (year + (i-_index-1));
+				var title = '<a class="year" id="ic_y_'+_year+'" href="javascript:;">' + _format('year', _year) + '</a>';
+
+				if(i == 1) {
+					view = ['month', _year];
+					if(view[0] != 'month') viewChange = [year, month];
+				}
+
+				var main = _monthList(_year, viewChange[0], viewChange[1]);
+			}
+			// build year picker
+			else if(mode == 'year') {
+
+				var dl_first = Math.floor(year/10) * 10;
+				var dl_end = dl_first + 9;
+
+				var _first = (dl_first + (i-_index-1) * 10);
+				var _last = (dl_end + (i-_index-1) * 10);
+				var title = _format('year', _first) + "-" + _format('year', _last);
+
+				if(i == 1) {
+					view = ['year', _first];
+					if(view[0] != 'year') viewChange[0] = year;
+				}
+
+				var main = _yearList(_first, viewChange[0]);
+			}
+
+			calendar.append("<dl><dt>"+prev+'<span>'+title+"</span>"+next+"</dt><dd>"+main+"</dd></dl>");
+		}
+		if(opts.closebtn) calendar.append('<dl class="close"><a href="javascript:;">x</a></dl>');
+
+		addEvent(obj, calendar, mode);
+
+		if(_init == true) $(obj).focus();
+	};
+
+
+	// Build date list
+	var _dateList = function(year, month, days) {
+		// get 1th in month
+		var temp = getDateObj([year, month, 1]);
+		var day = temp.getDay();
+
+		// build week
+		var main = '<div>';
+		for(var i=0; i<=6; i++)
+			main += '<span class="week'+i+'">'+opts.daystr[i]+'</span>';
+		main += '</div>';
+
+		// build space
+		for(var i=1; i<=day; i++){
+			var week = i % 7;
+			main += '<span class="empty week'+week+'"><span>&nbsp;</span></span>';
+		}
+
+		for(var i=1; i<=days; i++)
+		{
+			var id  = "ic_d_" + year + "-" + month + "-" + i;
+			var dis =  inRange(year, month, i, opts.disable);
+			var cla = "week" + ((day + i -1) % 7);
+			cla +=  inRange(year, month, i, selected) ? ' selected' : '';
+			cla +=  dis ?  ' disable' : '';
+			cla +=  isArea(year, month, i) ? ' area' : '';
+			cla = 'class="'+cla+'"';
+			var str = dateReplace(year, month, i);
+			if(opts.readonly || dis)
+				main += '<span id="' + id + '" class="day"><span '+cla+'>' + str + '</span></span>';
+			else
+				main += '<span id="' + id + '" class="day"><a ' + cla + ' href="javascript:;">' + str + '</a></span>';
+		}
+
+		// build space
+		for(var i=1; i<=7-((day+days)%7); i++)
+			main += '<span class="empty"><span>&nbsp;</span></span>';
+
+		return main;
+	};
+
+
+
+	// Build month list
+	var _monthList = function(year, selyear, selmonth){
+		var main = '';
+		for(var i = 1; i <= 12; i ++) {
+			cla = (year == selyear && i == selmonth) ? 'class="selected"' : '';
+			main += '<span class="month"><a id="ic_d_' + year + '-' + i + '" ' + cla + ' href="javascript:;">' + _format('onlymonth', i) + '</a></span>';
+		}
+		return main;
+	};
+
+
+
+	// Build year list
+	var _yearList = function(start, select){
+		var main = cla = '';
+		for(var i = start; i < start + 10; i++) {
+			cla = i == select ? 'class="selected"' : '';
+			main += '<span class="year"><a id="ic_d_' + i + '" ' + cla + ' href="javascript:;">' + _format('year', i) + '</a></span>';
+		}
+		return main;
+	};
+
+
+	// on Return
+	var _return = function(date, dateobj, input, calendar, a, selected) {
+		if(opts.onReturn) {
+			opts.onReturn(date, dateobj, input, calendar, a, selected);
+		}else {
+			$(input).val(date);
+			$.fn.icalendar.callback('return', {date:date, dateobj:dateObj, input:input, calendar:calendar, a:a, selected:selected});
+		}
+	}
+
+	// Bind Event
+	var addEvent = function(obj, calendar, mode) {
+		// add event for record mouse over the calendar.
+		calendar.find("span,a").mouseout(function(){ calendar.data("foc", opts.symbiont ? false : true); });
+		calendar.find("span,a").mouseover(function(){ calendar.data("foc", true); });
+		calendar.find("dd span").click(function(){ $(obj).focus(); });
+
+		if(!opts.symbiont) calendar.data("foc", true);
+
+		// select month
+		calendar.find("dt .month").click("click", function(){
+			_build(obj, calendar, view[1], view[2], 'month');
+		});
+
+		// select year
+		calendar.find("dt .year").bind("click", function(){
+			var year = parseInt($(this).attr("id").substr(5), 10);
+			_build(obj, calendar, view[1], 1, 'year');
+		});
+
+		// close
+		calendar.find(".close > a").click(function(){
+			calendar.hide();
+			$.fn.icalendar.callback("close", {input:obj, calendar:calendar, a:this});
+		});
+
+		if(mode == 'date') {
+			// prev month
+			calendar.find("dt .prev").click(function(){
+				var year = view[1];
+				var month = view[2] - 1;
+				if(month == 0) {
+					year = year - 1;
+					month = 12;
+				}
+				_build(obj, calendar, year, month, 'date');
+				$.fn.icalendar.callback("prev_month", {year:year, month:month, input:obj, calendar:calendar, a:this});
+			});
+
+			// next month
+			calendar.find("dt .next").click(function(){
+				var year = view[1];
+				var month = view[2] + 1;
+				if(month > 12) {
+					year = year + 1;
+					month = 1;
+				}
+				_build(obj, calendar, year, month, 'date');
+				$.fn.icalendar.callback("next_month", {year:year, month:month, input:obj, calendar:calendar, a:this});
+			});
+
+			// return
+			calendar.find("dd > :not(.close) > a").click(function(){
+				// isset selected ?
+				var select = true;
+				if( $.isEmptyObject(opts.selected) && opts.selected !== true ) {
+					calendar.find(".selected").removeClass("selected");
+					select = false;
+				}
+				$(this).toggleClass("selected");
+
+				// get date
+				var date = $(this).parent().attr("id").substr(5);
+				var datearr = toArray(date);
+				var dateobj = getDateObj(datearr);
+				date = _format('date', datearr);
+
+				// change selected value
+				lastSelected = $(this).is(".selected") ? date : null;
+				if(select) {
+					if($(this).is(".selected")){
+						selected.unshift(date);
+					}else{
+						selected = $.map(selected, function(n){
+							return n != date ? n : null;
+						});
+					}
+				}else{
+					selected = new Array(date);
+				}
+
+				// refocus
+				$(obj).focus();
+
+				// Area
+				if($.isEmptyObject(opts.area)) {
+					_return(date, dateobj, obj, calendar, this, selected);
+				}else{
+					if(!opts.area[0]) {
+						var newArea = {0:date, 1:opts.area[1]};
+						changeArea("start", newArea, date, dateobj, obj, calendar, this, selected);
+					}else{
+						var newArea = {0:opts.area[0], 1:date};
+						changeArea("end", newArea, date, dateobj, obj, calendar, this, selected);
+					}
+				}
+
+			});
+		}
+		else if(mode == 'month') {
+			// prev 1 year
+			calendar.find("dt .prev").click(function(){
+				var year = view[1] - 1;
+				_build(obj, calendar, year, 1, 'month');
+				$.fn.icalendar.callback("prev_year", {year:year, input:obj, calendar:calendar, a:this});
+			});
+
+			// next 1 year
+			calendar.find("dt .next").click(function(){
+				var year = view[1] + 1;
+				_build(obj, calendar, year, 1, 'month');
+				$.fn.icalendar.callback("next_year", {year:year, input:obj, calendar:calendar, a:this});
+			});
+
+			// goto this month
+			calendar.find("dd > :not(.close) > a").click(function(){
+				var _id = $(this).attr("id").substr(5).split("-");
+				var year = parseInt(_id[0], 10);
+				var month = parseInt(_id[1], 10);
+				_build(obj, calendar, year, month, 'date');
+				$.fn.icalendar.callback("select_month", {year:year, month:month, input:obj, calendar:calendar, a:this});
+			});
+		}
+		else if(mode == 'year') {
+			// prev 10 years
+			calendar.find("dt .prev").click(function(){
+				var year = view[1] - 10;
+				_build(obj, calendar, year, 1, 'year');
+				$.fn.icalendar.callback("prev_years", {year:year, input:obj, calendar:calendar, a:this});
+			});
+
+			// next 10 years
+			calendar.find("dt .next").click(function(){
+				var year = view[1] + 10;
+				_build(obj, calendar, year, 1, 'year');
+				$.fn.icalendar.callback("next_years", {year:year, input:obj, calendar:calendar, a:this});
+			});
+
+			// goto this year
+			calendar.find("dd > :not(.close) > a").click(function(){
+				var year = parseInt($(this).attr("id").substr(5), 10);
+				_build(obj, calendar, year, viewChange[1], 'date');
+				$.fn.icalendar.callback("select_year", {year:year, input:obj, calendar:calendar, a:this});
+			});
+
+		}
+	};
+
+
+
+	// select a date and change AREA (if options.area is not empty).
+	var changeArea = function(type, newArea, date, dateObj, obj, calendar, a, selected) {
+		newArea[0] = toArray(newArea[0]);
+		newArea[1] = toArray(newArea[1]);
+		var newAreaJoin = [ newArea[0].join('-') , newArea[1].join('-') ];
+		var a = $(a);
+
+		// both are empty or same.
+		if(!newAreaJoin[1] || !newAreaJoin[0] || (newAreaJoin[0] == newAreaJoin[1] && newAreaJoin[0] != '')) return;
+
+		// one of option values is empty
+		if((type == 'end' && newArea[0] == '') || (type == 'start' && newArea[1] == '')) {
+			calendar.find(".area").removeClass("area");
+			a.addClass("area");
+			$.fn.icalendar.callback("area", {date:date, dateobj:dateObj, input:obj, calendar:calendar, a:a, area:newArea});
+			_return(date, dateobj, obj, calendar, a, selected);
+			return;
+		}
+
+		if(!isArea(dateObj.getFullYear(), dateObj.getMonth()+1, dateObj.getDate(), newArea)) {
+			// If new date and the other can't be make up a new AREA.
+			// remove AREA
+			calendar.find(".area").removeClass("area");
+			// callback
+			$.fn.icalendar.callback("fail_to_area", {date:date, dateobj:dateObj, input:obj, calendar:calendar, a:a, area:newArea});
+			return;
+
+		}else{
+			a.addClass("area");
+			var days = calendar.find("dd .day");
+			if(type == 'end') {
+				var start = days.index(calendar.find(".day:has(.area):first"));
+				var end = days.index(a.parent());
+			}else{
+				var start = days.index(a.parent());
+				var end = days.index(calendar.find(".day:has(.area):last"));
+			}
+
+			if(start == end && newArea[0].join('-') != newArea[1].join('-')) {
+				if(type == 'end') {
+					start = days.index(calendar.find("#ic_d_"+newAreaJoin[0]));
+					if(start == -1) {
+						var _start = getDateObj(newArea[0]);
+						var _first = getDateObj(firstDate);
+						if(_start.getTime() < _first.getTime())
+							start = 0;
+					}
+				}else{
+					end = days.index(calendar.find("#ic_d_"+newAreaJoin[1]));
+					if(end == -1) {
+						var _end = getDateObj(newArea[1]);
+						var _last = getDateObj(lastDate);
+						if(_end.getTime() > _last.getTime())
+							end = days.length - 1;
+					}
+				}
+			}
+
+			if(start > end) {
+				$.fn.icalendar.callback("fail_to_area", {date:date, dateobj:dateObj, input:obj, calendar:calendar, a:a, area:newArea});
+				return;
+			}
+
+			days.slice(0, start).children("a").removeClass("area");
+			days.slice(end+1).children("a").removeClass("area");
+			days.slice(start, end).children("a").addClass("area");
+
+			$.fn.icalendar.callback("area", {date:date, dateobj:dateObj, input:obj, calendar:calendar, a:a, area:newArea});
+			_return(date, dateobj, obj, calendar, a, selected);
+		}
+	};
+
+
+
+	// init the dom for filling icalendar
+	var _initialize = function(d){
+		if(!opts.use){
+			$(d).next("."+opts.classname).remove();
+			$(d).after('<div class="'+opts.classname+'"></div>');
+			var c = $(d).next("."+opts.classname);
+			$(d).data("ic_width", c.width());
+		}
+
+		if(options !== undefined && options.format !== undefined)
+			opts.format = $.extend({}, $.fn.icalendar.defaults.format, options.format);
+
+	};
+
+
+
+	//init obj
+	return this.each(function(){
+
+		_initialize(this);
+
+		if(opts.show == true) buildCalendar(this);
+
+		// option:event is empty
+		if(opts.event) $(this).unbind(opts.event).bind(opts.event, function(){ buildCalendar(this); });
+
+        _init = true;
+
+		return this;
+	});
 
 };
 
-//v1.0.5 修正：移出函数外...
 
-//常规返回函数
-$.fn.icalendar.onReturn = function(date, dateObj, obj, calendar, a, selected){
-    $(obj).val(date);
-    $.fn.icalendar.callback("return", {date:date, dateobj:dateObj, obj:obj, calendar:calendar, a:a});
-}
-//over
-
-
-//回调函数
+// Callback
 $.fn.icalendar.callback = function(type, arg){ }
 
 

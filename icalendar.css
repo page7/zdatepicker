@@ -1,26 +1,28 @@
-.icalendar{ position:absolute; width:210px; z-index:9998; display:none; background:#FFF; border:#999 solid 1px; overflow:hidden; margin:1px 0px;}
+.icalendar{ position:absolute; width:210px; z-index:9998; display:none; background:#FFF; border:#999 solid 1px; overflow:hidden; margin:1px 0px; border-radius:5px; box-shadow:2px 2px 6px #CCC; }
 .icalendar dl{ width:208px; margin:0px; padding:1px; display:block; float:left;}
-.icalendar dl dt{ width:100%; height:25px; line-height:25px; background:#EEE; font-size:0px; word-spacing:0px; text-align:center; vertical-align:top; }
-.icalendar dl dt a,.icalendar dl dt .empty{ display:inline-block; width:10%; text-decoration:none; font-size:11px; color:#333; }
-.icalendar dl dt a:hover{ background:#CCC; color:#FFF; }
-.icalendar dl dt span{ display:inline-block; width:80%; font-size:12px; cursor:pointer; }
-.icalendar dl dt span a{ display:inline; width:auto; font-size:12px; font-weight:bold; color:#333; margin:0px 2px; text-decoration:underline; }
-.icalendar dl dt span a:hover{ background:none; color:#F05400; }
-.icalendar dd { width:100%; margin:0px; padding:0px; font-size:0px; word-spacing:-11px; text-align:left; vertical-align:top; text-align:center;}
-.icalendar dd div{background:#FAFAFA;}
+.icalendar dt{ width:100%; height:25px; line-height:25px; background:#EEE; font-size:0px; word-spacing:0px; text-align:center; vertical-align:top; }
+.icalendar dt a,
+.icalendar dt .empty{ display:inline-block; width:10%; text-decoration:none; font-size:11px; color:#333; }
+.icalendar dt a:hover{ background:#CCC; color:#FFF; border-radius:5px; }
+.icalendar dt span{ display:inline-block; width:80%; font-size:12px; cursor:pointer; }
+.icalendar dt span a{ display:inline; width:auto; font-size:12px; font-weight:bold; color:#333; margin:0px 2px; text-decoration:underline; }
+.icalendar dt span a:hover{ background:none; color:#F05400; }
+.icalendar dd { width:100%; margin:0px; padding:0px; font-size:0px; word-spacing:-11px; text-align:left; vertical-align:top; text-align:left; }
+.icalendar dd div{ background:#FAFAFA; }
 .icalendar dd div span,
 .icalendar dd span{ display:inline-block; width:14%; height:25px; line-height:25px; font-size:12px; word-spacing:normal; text-align:center; color:#666; vertical-align:top; }
-.icalendar dd span a, .icalendar dd span span{ display:inline-block; width:100%; line-height:25px; text-decoration:none; color:#666;}
-.icalendar dd span a:hover{color:#F05400; background:#FFDFBF;}
-.icalendar dd span .selected{background:#FFFF66;}
-.icalendar dd span .disable{color:#BBB; background:#EEE;}
-.icalendar dd span .area{color:#F05400; background:#FFDFBF;}
+.icalendar dd span a,
+.icalendar dd span span{ display:inline-block; width:100%; line-height:25px; text-decoration:none; color:#666; }
+.icalendar dd span a:hover{ opacity:0.5; filter:alpha(opacity=50); }
+.icalendar dd span .selected{ background:#FFFF88; }
+.icalendar dd span .disable{ color:#BBB; background:#EEE; }
+.icalendar dd span .area{ color:#F05400; background:#FFDFBF; }
 .icalendar dd .month,
-.icalendar dd .year {width:25%; height:50px; }
+.icalendar dd .year { width:25%; height:50px; }
 .icalendar dd .month a,
-.icalendar dd .year a{width:100%; height:50px; line-height:50px; overflow:hidden;}
-.icalendar dd .week0 {color:#FF4400; }
-.icalendar dd .week6 {color:#88CC00; }
-.icalendar .close { display:block; font-size:10px; text-align:right; background:#EEE; width:100%; }
-.icalendar .close a{ display:inline-block; line-height:14px; width:14px; margin-right:5px; text-align:center; text-decoration:none; color:#333;}
-.icalendar .close a:hover{ background:#CCC;}
+.icalendar dd .year a{ width:100%; height:50px; line-height:50px; overflow:hidden; }
+.icalendar dd .week0 { color:#FF4400; }
+.icalendar dd .week6 { color:#88CC00; }
+.icalendar .close { display:block; text-align:right; background:#EEE; width:100%; padding:2px 0px; }
+.icalendar .close a{ display:inline-block; font:12px/12px "Tahoma"; width:14px; height:14px; margin-right:5px; text-align:center; text-decoration:none; color:#333; }
+.icalendar .close a:hover{ background:#C00; color:#FFF; border-radius:5px; }
