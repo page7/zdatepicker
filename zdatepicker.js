@@ -6,7 +6,7 @@
  * Dual licensed under the MIT licenses.
  * http://jquery.org/license
  *
- * Version:3.1.1
+ * Version:3.1.2
  * Date:2014-02
  */
 
