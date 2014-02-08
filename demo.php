@@ -352,7 +352,7 @@
 
 <h2 id="demo">Demo</h2>
 
-<h4 id="demo_1">1-1. Simple</h4>
+<h4 id="demo_1-1">1-1. Simple</h4>
 <div class="demo">
     <input class="time1" value="" />
 
@@ -560,8 +560,8 @@
 <div class="demo">
     <input class="time5_2_a" value="<?=date('Y-m')?>-02" /> -- <input class="time5_2_b" value="<?=date('Y-m')?>-05"><br />
     <input class="time5_2_a" value="<?=date('Y-m')?>-09" /> -- <input class="time5_2_b" value="<?=date('Y-m')?>-12"><br />
-    <input class="time5_2_a" value="<?=date('Y-m')?>-29" /> -- <input class="time5_2_b" value="<?=date('Y')?>-<?=(date('n')+1)?>-03" /><br />
-    <input class="time5_2_a" value="<?=date('Y')?>-<?=(date('n')+1)?>-11" /> -- <input class="time5_2_b" value="<?=date('Y')?>-<?=(date('n')+1)?>-23" />
+    <input class="time5_2_a" value="<?=date('Y-m')?>-29" /> -- <input class="time5_2_b" value="<?=date('Y')?>-<?=sprintf('%02d', date('n')+1)?>-03" /><br />
+    <input class="time5_2_a" value="<?=date('Y')?>-<?=sprintf('%02d', date('n')+1)?>-11" /> -- <input class="time5_2_b" value="<?=date('Y')?>-<?=sprintf('%02d', date('n')+1)?>-23" />
 
     <div class="code">
         <h5>Code：</h5>
