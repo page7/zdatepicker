@@ -6,8 +6,7 @@
         "datepicker",
 		"i18n",
 		"era",
-		"multiple",
-		"\u652f\u6301\u4e2d\u6587"
+		"multiple"
     ],
     "version": "3.1.0",
     "author": {
