@@ -10,6 +10,13 @@
 
 <h3>Change Log</h3>
 
+<h4>3.1.1</h4>
+Date：2014-02-08<br />
+Contributor：<a href="http://www.nolanchou.com" target="_blank">page7</a><br />
+	　1.Add: new option - "prevbtn".<br />
+	　2.Add: new option - "nextbtn".<br />
+<br />
+
 <h4>3.1</h4>
 Date：2014-02-08<br />
 Contributor：<a href="http://www.nolanchou.com" target="_blank">page7</a><br />
