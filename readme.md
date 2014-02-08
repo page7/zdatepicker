@@ -1,14 +1,22 @@
-<h2>icalendar - a smaller and easier datepicker of jquery plugin</h2>
+<h2>zdatepicker - a simple,light-weight datepicker plugin for jquery</h2>
 
 <h3>中文地址</h3>
-<a href="http://www.nolanchou.com/icalendar/" target="_blank">点击这里</a>
+<a href="http://www.nolanchou.com/zdatepicker/" target="_blank">点击这里</a>
 <br />
 
 <h3>DEMO</h3>
-<a href="http://www.nolanchou.com/icalendar/demo.php" target="_blank">Demo.</a>
+<a href="http://www.nolanchou.com/zdatepicker/demo.php" target="_blank">Demo.</a>
 <br />
 
 <h3>Change Log</h3>
+
+<h4>3.1</h4>
+Date：2014-02-08<br />
+Contributor：<a href="http://www.nolanchou.com" target="_blank">page7</a><br />
+	　1.Rename: new name "zdatepicker".<br />
+	　2.Add: new option - "weekoffset".<br />
+	　3.Add: new option - "onFilter", you can use it to change date's view.<br />
+<br />
 
 <h4>3.0.1</h4>
 Date：2014-01-31<br />
@@ -25,6 +33,7 @@ Contributor：<a href="http://www.nolanchou.com" target="_blank">page7</a><br />
 	　4.Update: change note and demo for English.<br />
 	　5.Update: add option:onReturn.<br />
 	　6.Update: not be compatible for lower version.<br />
+	　7.Delete: $.fn.icalendar.onReturn.<br />
 <br />
 
 <h4>2.1</h4>

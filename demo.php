@@ -2,13 +2,13 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>DEMO - icalendar - a smaller and easier datepicker of jquery plugin.</title>
-    <meta name="keywords" content="icalendar,js,jquery,plugin,datepicker,calendar,NolanChou 周" />
-    <meta name="description" content="icalendar - a smaller and easier datepicker of jquery plugin." />
+    <title>DEMO - zdatepicker - a simple,light-weight datepicker plugin for jquery.</title>
+    <meta name="keywords" content="zdatepicker,js,jquery,plugin,datepicker,calendar,NolanChou 周" />
+    <meta name="description" content="zdatepicker - a smaller and easier datepicker of jquery plugin." />
     <meta name="generator" content="Jquery" />
 
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="./icalendar.js"></script>
+    <script type="text/javascript" src="./zdatepicker.js"></script>
 
     <style type="text/css">
     body{ font:12px/120% Helvetica, Geneva, Arial, sans-serif; padding:0px 30px; margin:0px; margin-left:250px; box-shadow:inset 5px 0px 5px #EEE; }
@@ -26,7 +26,7 @@
     dl,dt,dd{ margin:0px; padding:0px; }
     ul{ margin-top:0px; }
     ul .note{ list-style:none; color:#999; margin-left:-20px; padding:5px 0px; }
-    .directory{ position:fixed; top:0px; left:0px; padding:20px; width:200px; }
+    .directory{ position:fixed; top:0px; left:0px; padding:20px; width:200px; overflow:auto; }
     .directory h2{ margin:0px; }
     .directory ul{ padding-left:20px; }
     .directory ul li{ font-size:14px; line-height:20px; width:100%; }
@@ -34,7 +34,7 @@
     </style>
     <link href="http://agorbatchev.typepad.com/pub/sh/3_0_83/styles/shCore.css" rel="stylesheet" type="text/css" />
     <link href="http://agorbatchev.typepad.com/pub/sh/3_0_83/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
-    <link type="text/css" rel="stylesheet" href="./icalendar.css" />
+    <link type="text/css" rel="stylesheet" href="./zdatepicker.css" />
 </head>
 
 <body>
@@ -58,78 +58,80 @@
         <li>
             <a href="#demo">Demo</a>
             <ul>
-                <li><a href="#demo_1">Simple</a></li>
+                <li><a href="#demo_1-1">Simple</a></li>
+                <li><a href="#demo_1-2">Show one month.</a></li>
+                <li><a href="#demo_1-3">Replace a date display.</a></li>
                 <li><a href="#demo_2">Pick multiple dates.</a></li>
                 <li><a href="#demo_3-1">Set date ranges are disable.</a></li>
                 <li><a href="#demo_3-2">Setting option use array.</a></li>
                 <li><a href="#demo_4">Set dates or ranges are selected.</a></li>
                 <li><a href="#demo_5-1">Set a "AREA" range.</a></li>
                 <li><a href="#demo_5-2">Use a function to get ranges.</a></li>
-                <li><a href="#demo_6">Change other event to get icalendar.</a></li>
+                <li><a href="#demo_6">Change other dom's event to get zdatepicker.</a></li>
                 <li><a href="#demo_7-1">Position by direction</a></li>
                 <li><a href="#demo_7-2">Position by coordinate</a></li>
                 <li><a href="#demo_8">Close button</a></li>
                 <li><a href="#demo_9">Symbiont</a></li>
-                <li><a href="#demo_10">Show after icalendar init.</a></li>
+                <li><a href="#demo_10">Show after zdatepicker init.</a></li>
                 <li><a href="#demo_11">Not show anything.</a></li>
                 <li><a href="#demo_12">Readonly</a></li>
-                <li><a href="#demo_13">Change Event for show icalendar.</a></li>
+                <li><a href="#demo_13">Change Event for show zdatepicker.</a></li>
                 <li><a href="#demo_14-1">Date format</a></li>
                 <li><a href="#demo_14-2">Special era</a></li>
                 <li><a href="#demo_15">Replace return function, and use callback.</a></li>
-                <li><a href="#demo_16">Replace date to other string.</a></li>
+                <li><a href="#demo_16">Advanced setting for date's status.</a></li>
             </ul>
         </li>
     </ul>
 </div>
 
-<h1>DEMO - icalendar</h1>
+<h1>DEMO - zdatepicker</h1>
 
 <h2 id="style">Style</h2>
 <pre class="brush:css; toolbar:false;">
 /* You Can Rewrite These */
-.icalendar{ position:absolute; width:210px; z-index:9998; display:none; background:#FFF; border:#999 solid 1px; overflow:hidden; margin:1px 0px; border-radius:5px; box-shadow:2px 2px 6px #CCC; }
-.icalendar dl{ width:208px; margin:0px; padding:1px; display:block; float:left;}
-.icalendar dt{ width:100%; height:25px; line-height:25px; background:#EEE; font-size:0px; word-spacing:0px; text-align:center; vertical-align:top; }
-.icalendar dt a,
-.icalendar dt .empty{ display:inline-block; width:10%; text-decoration:none; font-size:11px; color:#333; }
-.icalendar dt a:hover{ background:#CCC; color:#FFF; border-radius:5px; }
-.icalendar dt span{ display:inline-block; width:80%; font-size:12px; cursor:pointer; }
-.icalendar dt span a{ display:inline; width:auto; font-size:12px; font-weight:bold; color:#333; margin:0px 2px; text-decoration:underline; }
-.icalendar dt span a:hover{ background:none; color:#F05400; }
-.icalendar dd { width:100%; margin:0px; padding:0px; font-size:0px; word-spacing:-11px; text-align:left; vertical-align:top; text-align:left; }
-.icalendar dd div{ background:#FAFAFA; }
-.icalendar dd div span,
-.icalendar dd span{ display:inline-block; width:14%; height:25px; line-height:25px; font-size:12px; word-spacing:normal; text-align:center; color:#666; vertical-align:top; }
-.icalendar dd span a,
-.icalendar dd span span{ display:inline-block; width:100%; line-height:25px; text-decoration:none; color:#666; }
-.icalendar dd span a:hover{ opacity:0.5; filter:alpha(opacity=50); }
-.icalendar dd span .selected{ background:#FFFF88; }
-.icalendar dd span .disable{ color:#BBB; background:#EEE; }
-.icalendar dd span .area{ color:#F05400; background:#FFDFBF; }
-.icalendar dd .month,
-.icalendar dd .year { width:25%; height:50px; }
-.icalendar dd .month a,
-.icalendar dd .year a{ width:100%; height:50px; line-height:50px; overflow:hidden; }
-.icalendar dd .week0 { color:#FF4400; }
-.icalendar dd .week6 { color:#88CC00; }
-.icalendar .close { display:block; text-align:right; background:#EEE; width:100%; padding:2px 0px; }
-.icalendar .close a{ display:inline-block; font:12px/12px "Tahoma"; width:14px; height:14px; margin-right:5px; text-align:center; text-decoration:none; color:#333; }
-.icalendar .close a:hover{ background:#C00; color:#FFF; border-radius:5px; }
+.zdatepicker{ position:absolute; width:210px; z-index:9998; display:none; background:#FFF; border:#999 solid 1px; overflow:hidden; margin:1px 0px; border-radius:5px; box-shadow:2px 2px 6px #CCC; }
+.zdatepicker dl{ width:208px; margin:0px; padding:1px; display:block; float:left;}
+.zdatepicker dt{ width:100%; height:25px; line-height:25px; background:#EEE; font-size:0px; word-spacing:0px; text-align:center; vertical-align:top; }
+.zdatepicker dt a,
+.zdatepicker dt .empty{ display:inline-block; width:10%; text-decoration:none; font-size:11px; color:#333; }
+.zdatepicker dt a:hover{ background:#CCC; color:#FFF; border-radius:5px; }
+.zdatepicker dt span{ display:inline-block; width:80%; font-size:12px; cursor:pointer; }
+.zdatepicker dt span a{ display:inline; width:auto; font-size:12px; font-weight:bold; color:#333; margin:0px 2px; text-decoration:underline; }
+.zdatepicker dt span a:hover{ background:none; color:#F05400; }
+.zdatepicker dd { width:100%; margin:0px; padding:0px; font-size:0px; word-spacing:-11px; text-align:left; vertical-align:top; text-align:left; }
+.zdatepicker dd div{ background:#FAFAFA; }
+.zdatepicker dd div span,
+.zdatepicker dd span{ display:inline-block; width:14%; height:25px; line-height:25px; font-size:12px; word-spacing:normal; text-align:center; color:#666; vertical-align:top; }
+.zdatepicker dd span a,
+.zdatepicker dd span span{ display:inline-block; width:100%; line-height:25px; text-decoration:none; color:#666; }
+.zdatepicker dd span a:hover{ opacity:0.5; filter:alpha(opacity=50); }
+.zdatepicker dd span .selected{ background:#FFFF88; }
+.zdatepicker dd span .disable{ color:#BBB; background:#EEE; }
+.zdatepicker dd span .area{ color:#F05400; background:#FFDFBF; }
+.zdatepicker dd .month,
+.zdatepicker dd .year { width:25%; height:50px; }
+.zdatepicker dd .month a,
+.zdatepicker dd .year a{ width:100%; height:50px; line-height:50px; overflow:hidden; }
+.zdatepicker dd .week0 { color:#FF4400; }
+.zdatepicker dd .week6 { color:#88CC00; }
+.zdatepicker .close { display:block; text-align:right; background:#EEE; width:100%; padding:2px 0px; }
+.zdatepicker .close a{ display:inline-block; font:12px/12px "Tahoma"; width:14px; height:14px; margin-right:5px; text-align:center; text-decoration:none; color:#333; }
+.zdatepicker .close a:hover{ background:#C00; color:#FFF; border-radius:5px; }
 </pre>
 
 
 <h2 id="options">Options</h2>
 <h5 id="classname">classname</h5>
 <ul>
-    <li class="note">icalendar container's class name.</li>
+    <li class="note">zdatepicker container's class name.</li>
     <li>type:string</li>
-    <li>default:"icalendar"</li>
+    <li>default:"zdatepicker"</li>
 </ul>
 
 <h5 id="event">event</h5>
 <ul>
-    <li class="note">event of show icalendar. (don't use 'focus' and 'blur')</li>
+    <li class="note">event of show zdatepicker. (don't use 'focus' and 'blur')</li>
     <li>type:string</li>
     <li>default:"click"</li>
 </ul>
@@ -160,6 +162,13 @@
     <li>default:["01","02","03","04","05","06","07","08","09","10","11","12"]</li>
 </ul>
 
+<h5 id="monthstr">weekoffset</h5>
+<ul>
+    <li class="note">Select the day to start the week from. Default option is Sunday(0), but you can start a week on Friday if you want to by setting this option to 5.</li>
+    <li>type:number</li>
+    <li>default:0</li>
+</ul>
+
 <h5 id="year2str">year2str</h5>
 <ul>
     <li class="note">format a date to return.</li>
@@ -187,7 +196,6 @@
     <li>type:boolean</li>
     <li>default:true</li>
 </ul>
-
 
 <h5 id="readonly">readonly</h5>
 <ul>
@@ -231,7 +239,7 @@
 
 <h5 id="use">use</h5>
 <ul>
-    <li class="note">use other dom (jquery selector: #id / .class ..) to build icalendar.</li>
+    <li class="note">use other dom (jquery selector: #id / .class ..) to build zdatepicker.</li>
     <li>type:string</li>
     <li>default:false</li>
 </ul>
@@ -250,6 +258,13 @@
     <li>default:false</li>
 </ul>
 
+<h5 id="onReturn">onFilter</h5>
+<ul>
+    <li class="note">filter date status(disable? selected? area?). 5 args(date, month, year, day, status), return array.</li>
+    <li>type:function</li>
+    <li>default:null</li>
+</ul>
+
 <h5 id="onReturn">onReturn</h5>
 <ul>
     <li class="note">change the default return func.</li>
@@ -262,7 +277,7 @@
 
 <h2 id="callback">Callback</h2>
 
-<h4>$.fn.icalendar.callback with two parameters: type and arg.<br />It's a global function! You can rewrite it.</h4>
+<h4>$.fn.zdatepicker.callback with two parameters: type and arg.<br />It's a global function! You can rewrite it.</h4>
 
 <h5 id="type">parameter - type</h5>
 <ul>
@@ -283,7 +298,7 @@
 <h5 id="arg">parameter - arg</h5>
 <ul>
     <li>input : the dom of input.</li>
-    <li>calendar : the dom of icalendar.</li>
+    <li>calendar : the dom of zdatepicker.</li>
     <li>a : a "A" dom at last click.</li>
     <li>date : string of date to return, if have.</li>
     <li>dateObj : a Dateobj about date, if have.</li>
@@ -296,22 +311,50 @@
 
 <h2 id="demo">Demo</h2>
 
-<h4 id="demo_1">1. Simple</h4>
+<h4 id="demo_1">1-1. Simple</h4>
 <div class="demo">
     <input class="time1" value="" />
 
     <div class="code">
         <h5>Code：</h5>
         <pre class="brush:js; toolbar:false;">
-        $(".time1").icalendar();
+        $(".time1").zdatepicker();
         </pre>
         <script type="text/javascript">
-            $(".time1").icalendar();
+            $(".time1").zdatepicker();
         </script>
     </div>
 </div>
 
+<h4 id="demo_1-2">1-2. Show one month.</h4>
+<div class="demo">
+    <input class="time1_2" value="" />
 
+    <div class="code">
+        <h5>Code：</h5>
+        <pre class="brush:js; toolbar:false;">
+        $(".time1_2").zdatepicker({viewmonths:1});
+        </pre>
+        <script type="text/javascript">
+            $(".time1_2").zdatepicker({viewmonths:1});
+        </script>
+    </div>
+</div>
+
+<h4 id="demo_1-3">1-3. Replace a date display.</h4>
+<div class="demo">
+    <input class="time1_3" value="" />
+
+    <div class="code">
+        <h5>Code：</h5>
+        <pre class="brush:js; toolbar:false;">
+        $(".time1_3").zdatepicker({replace:{'<?=date('Y-m-d')?>':'Today'}});
+        </pre>
+        <script type="text/javascript">
+            $(".time1_3").zdatepicker({replace:{'<?=date('Y-m-d')?>':'Today'}});
+        </script>
+    </div>
+</div>
 
 
 <h4 id="demo_2">2. Pick multiple dates.</h4>
@@ -321,14 +364,13 @@
     <div class="code">
         <h5>Code：</h5>
         <pre class="brush:js; toolbar:false;">
-        $(".time2").icalendar({viewmonths:1, selected:true});
+        $(".time2").zdatepicker({selected:true});
         </pre>
         <script type="text/javascript">
-            $(".time2").icalendar({viewmonths:1, selected:true});
+            $(".time2").zdatepicker({selected:true});
         </script>
     </div>
 </div>
-
 
 
 <h4 id="demo_3-1">3-1. Set date ranges are disable.</h4>
@@ -338,7 +380,7 @@
     <div class="code">
         <h5>Code：</h5>
         <pre class="brush:js; toolbar:false;">
-        $(".time3").icalendar({
+        $(".time3").zdatepicker({
             disable:{
                 0:{0:"<?=date('Y-m')?>-02",1:"<?=date('Y-m')?>-11"},
                 1:{0:"<?=date('Y-m')?>-20",1:"<?=date('Y-m')?>-29"}
@@ -346,7 +388,7 @@
         });
         </pre>
         <script type="text/javascript">
-            $(".time3").icalendar({
+            $(".time3").zdatepicker({
                 disable:{
                     0:{0:"<?=date('Y-m')?>-02",1:"<?=date('Y-m')?>-11"},
                     1:{0:"<?=date('Y-m')?>-20",1:"<?=date('Y-m')?>-29"}
@@ -364,7 +406,7 @@
     <div class="code">
         <h5>Code：</h5>
         <pre class="brush:js; toolbar:false;">
-        $(".time3_2").icalendar({
+        $(".time3_2").zdatepicker({
             disable:[
                 ["<?=date('Y-m')?>-02","<?=date('Y-m')?>-11"],
                 ["<?=date('Y-m')?>-20","<?=date('Y-m')?>-29"]
@@ -372,7 +414,7 @@
         });
         </pre>
         <script type="text/javascript">
-        $(".time3_2").icalendar({
+        $(".time3_2").zdatepicker({
             disable:[
                 ["<?=date('Y-m')?>-02","<?=date('Y-m')?>-11"],
                 ["<?=date('Y-m')?>-20","<?=date('Y-m')?>-29"]
@@ -391,7 +433,7 @@
     <div class="code">
         <h5>Code：</h5>
         <pre class="brush:js; toolbar:false;">
-        $(".time4").icalendar({
+        $(".time4").zdatepicker({
             selected:{
                 0:{0:"<?=date('Y-m')?>-05", 1:"<?=date('Y-m')?>-08"},
                 1:{0:"<?=date('Y-m')?>-29"}
@@ -399,7 +441,7 @@
         });
         </pre>
         <script type="text/javascript">
-        $(".time4").icalendar({
+        $(".time4").zdatepicker({
             selected:{
                 0:{0:"<?=date('Y-m')?>-05", 1:"<?=date('Y-m')?>-08"},
                 1:{0:"<?=date('Y-m')?>-29"}
@@ -419,7 +461,7 @@
     <div class="code">
         <h5>Code：</h5>
         <pre class="brush:js; toolbar:false;">
-        $(".time5_a").icalendar({
+        $(".time5_a").zdatepicker({
             viewmonths:2,
             area:{
                 0:'',
@@ -430,7 +472,7 @@
             }
         });
 
-        $(".time5_b").icalendar({
+        $(".time5_b").zdatepicker({
             viewmonths:2,
             initmonth:$(".time5_a"),
             area:{
@@ -443,7 +485,7 @@
         });
         </pre>
         <script type="text/javascript">
-        $(".time5_a").icalendar({
+        $(".time5_a").zdatepicker({
             viewmonths:2,
             area:{
                 0:'',
@@ -454,7 +496,7 @@
             }
         });
 
-        $(".time5_b").icalendar({
+        $(".time5_b").zdatepicker({
             viewmonths:2,
             initmonth:$(".time5_a"),
             area:{
@@ -494,7 +536,7 @@
         }
 
         $(".time5_2_a").click(function(){
-            $(this).icalendar({
+            $(this).zdatepicker({
                 viewmonths:2,
                 show:true,
                 area:{
@@ -506,7 +548,7 @@
         })
 
         $(".time5_2_b").click(function(){
-            $(this).icalendar({
+            $(this).zdatepicker({
                 viewmonths:2,
                 initmonth:$(this).prevAll(".time5_2_a").eq(0),
                 show:true,
@@ -530,7 +572,7 @@
         }
 
         $(".time5_2_a").click(function(){
-            $(this).icalendar({
+            $(this).zdatepicker({
                 viewmonths:2,
                 show:true,
                 area:{
@@ -542,7 +584,7 @@
         })
 
         $(".time5_2_b").click(function(){
-            $(this).icalendar({
+            $(this).zdatepicker({
                 viewmonths:2,
                 initmonth:$(this).prevAll(".time5_2_a").eq(0),
                 show:true,
@@ -560,17 +602,18 @@
 
 
 
-<h4 id="demo_6">6. Change other event to get icalendar.</h4>
+<h4 id="demo_6">6. Change other dom's event to get zdatepicker.</h4>
 <div class="demo">
-    <input class="time6" value="<?=date('Y-m')?>-15" /><input type="button" value="click me!" onclick="doicalendar()" />
+    <input class="time6" value="<?=date('Y-m')?>-15" /><input type="button" value="click me!" onclick="dozdatepicker()" />
 
     <div class="code">
         <h5>Code：</h5>
         <pre class="brush:js; toolbar:false;">
-        // "click me!!" button's onclick is "doicalendar()"
-        function doicalendar(){
+        // "click me!!" button's onclick is "dozdatepicker()"
+        function dozdatepicker(){
             var rand = Math.round(Math.random() * 28);
-            $(".time6").icalendar({
+            var zdp = $(".time6").zdatepicker({
+                event:'',
                 viewmonths:1,
                 selected:{0:{0:"<?=date('Y-m')?>-"+rand}},
                 show:true
@@ -579,13 +622,15 @@
         }
         </pre>
         <script type="text/javascript">
-        function doicalendar(){
+        function dozdatepicker(){
             var rand = Math.round(Math.random() * 28);
-            $(".time6").icalendar({
+            var zdp = $(".time6").zdatepicker({
+                event:'',
                 viewmonths:1,
                 selected:{0:{0:"<?=date('Y-m')?>-"+rand}},
                 show:true
             });
+            console.log(zdp);
             $(".time6").focus();
         }
         </script>
@@ -602,13 +647,13 @@
     <div class="code">
         <h5>Code：</h5>
         <pre class="brush:js; toolbar:false;">
-        $(".time7_1").icalendar({
+        $(".time7_1").zdatepicker({
             viewmonths:1,
             pos:{top:"bottom", left:"right"}
         });
         </pre>
         <script type="text/javascript">
-        $(".time7_1").icalendar({viewmonths:1, pos:{top:"bottom", left:"right"}});
+        $(".time7_1").zdatepicker({viewmonths:1, pos:{top:"bottom", left:"right"}});
         </script>
     </div>
 </div>
@@ -620,13 +665,13 @@
 
     <div class="code">
         <pre class="brush:js; toolbar:false;">
-        $(".time7_2").icalendar({
+        $(".time7_2").zdatepicker({
             viewmonths:1,
             pos:{top:-100, left:300}
         });
         </pre>
         <script type="text/javascript">
-        $(".time7_2").icalendar({viewmonths:1, pos:{top:-100, left:300}});
+        $(".time7_2").zdatepicker({viewmonths:1, pos:{top:-100, left:300}});
         </script>
     </div>
 </div>
@@ -641,13 +686,13 @@
     <div class="code">
         <h5>Code：</h5>
         <pre class="brush:js; toolbar:false;">
-        $(".time8").icalendar({
+        $(".time8").zdatepicker({
             viewmonths:2,
             closebtn:true
         });
         </pre>
         <script type="text/javascript">
-        $(".time8").icalendar({viewmonths:2, closebtn:true});
+        $(".time8").zdatepicker({viewmonths:2, closebtn:true});
         </script>
     </div>
 </div>
@@ -664,14 +709,14 @@
     <div class="code">
         <h5>Code：</h5>
         <pre class="brush:js; toolbar:false;">
-        $(".time9_a").icalendar({
+        $(".time9_a").zdatepicker({
             viewmonths:1,
             symbiont:false,
             closebtn:true
         });
         </pre>
         <script type="text/javascript">
-        $(".time9_a").icalendar({viewmonths:1, symbiont:false, closebtn:true});
+        $(".time9_a").zdatepicker({viewmonths:1, symbiont:false, closebtn:true});
         </script>
     </div>
 
@@ -684,12 +729,12 @@
     <div class="code">
         <h5>Code：</h5>
         <pre class="brush:js; toolbar:false;">
-        $(".time9_b").icalendar({
+        $(".time9_b").zdatepicker({
             viewmonths:1
         });
         </pre>
         <script type="text/javascript">
-        $(".time9_b").icalendar({viewmonths:1});
+        $(".time9_b").zdatepicker({viewmonths:1});
         </script>
     </div>
 </div>
@@ -697,7 +742,7 @@
 
 
 
-<h4 id="demo_10">10. Show after icalendar init.</h4>
+<h4 id="demo_10">10. Show after zdatepicker init.</h4>
 <div class="demo">
     <input class="time10" value="<?=date('Y-m')?>-15" />
 
@@ -705,12 +750,12 @@
         <h5>Code：</h5>
         <pre class="brush:js; toolbar:false;">
         // input's position is changed after SyntaxHighlighter init.
-        $(".time10").icalendar({
+        $(".time10").zdatepicker({
             viewmonths:1,
             show:true
         });
         </pre>
-        <script type="text/javascript">$(".time10").icalendar({viewmonths:1, show:true});</script>
+        <script type="text/javascript">$(".time10").zdatepicker({viewmonths:1, show:true});</script>
     </div>
 </div>
 
@@ -718,20 +763,20 @@
 
 
 
-<h4 id="demo_11">11. Not show anything.(but icalendar is inited.</h4>
+<h4 id="demo_11">11. Not show anything.(but zdatepicker is inited.</h4>
 <div class="demo">
     <input class="time11" value="<?=date('Y-m')?>-15" />
 
     <div class="code">
         <h5>Code：</h5>
         <pre class="brush:js; toolbar:false;">
-        $(".time11").icalendar({
+        $(".time11").zdatepicker({
             viewmonths:1,
             show:false
         });
         </pre>
         <script type="text/javascript">
-        $(".time11").icalendar({viewmonths:1, show:false});
+        $(".time11").zdatepicker({viewmonths:1, show:false});
         </script>
     </div>
 </div>
@@ -746,13 +791,13 @@
     <div class="code">
         <h5>Code：</h5>
         <pre class="brush:js; toolbar:false;">
-        $(".time12").icalendar({
+        $(".time12").zdatepicker({
             viewmonths:1,
             readonly:true
         });
         </pre>
         <script type="text/javascript">
-        $(".time12").icalendar({viewmonths:1, readonly:true});
+        $(".time12").zdatepicker({viewmonths:1, readonly:true});
         </script>
     </div>
 </div>
@@ -760,20 +805,20 @@
 
 
 
-<h4 id="demo_13">13. Change Event for show icalendar.</h4>
+<h4 id="demo_13">13. Change Event for show zdatepicker.</h4>
 <div class="demo">
     <input class="time13" value="<?=date('Y-m')?>-15" />
 
     <div class="code">
         <h5>Code：</h5>
         <pre class="brush:js; toolbar:false;">
-        $(".time13").icalendar({
+        $(".time13").zdatepicker({
             viewmonths:1,
             event:"mouseover"
         });
         </pre>
         <script type="text/javascript">
-        $(".time13").icalendar({viewmonths:1, event:"mouseover"});
+        $(".time13").zdatepicker({viewmonths:1, event:"mouseover"});
         </script>
     </div>
 </div>
@@ -788,14 +833,14 @@
     <div class="code">
         <h5>Code：</h5>
         <pre class="brush:js; toolbar:false;">
-        $(".time14_1").icalendar({
+        $(".time14_1").zdatepicker({
             format:{date:"dd,mm\/yyyy", month:"mm\/yyyy", year:"yyyy", onlymonth:"mm."},    // use regular for replace, so you need use \ to some char.
             daystr:["S","M","T","W","Th","F","S"],
             monthstr:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
         });
         </pre>
         <script type="text/javascript">
-        $(".time14_1").icalendar({
+        $(".time14_1").zdatepicker({
             format:{date:"dd,mm\/yyyy", month:"mm\/yyyy", year:"yyyy", onlymonth:"mm."},
             daystr:["S","M","T","W","Th","F","S"],
             monthstr:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
@@ -816,7 +861,7 @@
         <h5>Code：</h5>
         <pre class="brush:js; toolbar:false;" style="height:400px;">
         // China_taiwan era.
-        $(".time14_2").icalendar({
+        $(".time14_2").zdatepicker({
             format:{date:"yyyy年mm月dd日", month:"yyyy年mm月", year:"yyyy年", onlymonth:"mm月"},
             daystr:["日","一","二","三","四","五","六"],
             monthstr:["1","2","3","4","5","6","7","8","9","10","11","12"],
@@ -840,7 +885,7 @@
         });
         </pre>
         <script type="text/javascript">
-        $(".time14_2").icalendar({
+        $(".time14_2").zdatepicker({
             format:{date:"yyyy年mm月dd日", month:"yyyy年mm月", year:"yyyy年", onlymonth:"mm月"},
             daystr:["日","一","二","三","四","五","六"],
             monthstr:["1","2","3","4","5","6","7","8","9","10","11","12"],
@@ -886,7 +931,7 @@
         }
 
         // please click next month.
-        $.fn.icalendar.callback = function(type, arg){
+        $.fn.zdatepicker.callback = function(type, arg){
             if(type == 'next_month'){
                 alert("goto:"+arg.year+"-"+arg.month);
                 $(arg.input).focus();
@@ -895,7 +940,7 @@
 
         $(".time15").click(function(){
             var sel = returnSelect();
-            $(this).icalendar({
+            $(this).zdatepicker({
                 show:true,
                 viewmonths:1,
                 selected:sel,
@@ -910,25 +955,36 @@
 </div>
 
 
-<h4 id="demo_16">16. Replace date to other string.</h4>
+
+
+<h4 id="demo_16">16. Advanced setting for date's status.</h4>
 <div class="demo">
     <input class="time16" value="" />
 
     <div class="code">
-    <h5>Code：</h5>
-    <pre class="brush:js; toolbar:false;" style="height:400px;">
-    $(".time16").icalendar({
-        replace:{'<?=date('Y-m-d')?>':'Today'}
-    });
-    </pre>
-    <script type="text/javascript">
-    $(".time16").icalendar({
-        replace:{'<?=date('Y-m-d')?>':'Today'}
-    });
-    </script>
+        <h5>Code：</h5>
+        <pre class="brush:js; toolbar:false;">
+        $(".time16").zdatepicker({
+            onFilter:function(d, m, y, w, cla){
+                if(w == 0 || w == 6){
+                    cla.push('disable');
+                }
+                return cla;
+            }
+        });
+        </pre>
+        <script type="text/javascript">
+        $(".time16").zdatepicker({
+            onFilter:function(d, m, y, w, cla){
+                if(w == 0 || w == 6){
+                    cla.push('disable');
+                }
+                return cla;
+            }
+        });
+        </script>
     </div>
 </div>
-
 
 
 <script src="http://agorbatchev.typepad.com/pub/sh/3_0_83/scripts/shCore.js" type="text/javascript"></script>
@@ -937,6 +993,14 @@
 <script src="http://agorbatchev.typepad.com/pub/sh/3_0_83/scripts/shBrushCss.js" type="text/javascript"></script>
 <script type="text/javascript">
 SyntaxHighlighter.all();
+
+$(function(){
+    $(".directory").height($(window).height());
+
+    $(window).resize(function(){
+        $(".directory").height($(window).height());
+    });
+})
 </script>
 
 

@@ -2,11 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>DEMO - icalendar - a Jquery plugin that easy to develop and use.</title>
+<title>DEMO - zdatepicker - a simple,light-weight datepicker plugin for jquery.</title>
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-<script type="text/javascript" src="./icalendar.js"></script>
-<link type="text/css" rel="stylesheet" href="./icalendar.css" />
+<script type="text/javascript" src="./zdatepicker.js"></script>
+<link type="text/css" rel="stylesheet" href="./zdatepicker.css" />
 <style type="text/css">
 body{ font:12px/120% Helvetica, Geneva, Arial, sans-serif; padding:0px; }
 h1{ font-size:25px; color:#333; border-bottom:#CCC dashed 1px; padding:20px 0px; }
@@ -37,7 +37,7 @@ function returnSelect(){
     return i > 1 ? sel : true ;
 }
 
-$.fn.icalendar.callback = function(type, arg){
+$.fn.zdatepicker.callback = function(type, arg){
     if(type == 'next_month'){
         alert("goto:"+arg.year+"-"+arg.month);
         $(arg.input).focus();
@@ -46,7 +46,7 @@ $.fn.icalendar.callback = function(type, arg){
 
 $(".time15").click(function(){
     var sel = returnSelect();
-    $(this).icalendar({
+    $(this).zdatepicker({
         show:true,
         viewmonths:1,
         selected:sel,

@@ -1,0 +1,28 @@
+.zdatepicker{ position:absolute; width:210px; z-index:9998; display:none; background:#FFF; border:#999 solid 1px; overflow:hidden; margin:1px 0px; border-radius:5px; box-shadow:2px 2px 6px #CCC; }
+.zdatepicker dl{ width:208px; margin:0px; padding:1px; display:block; float:left;}
+.zdatepicker dt{ width:100%; height:25px; line-height:25px; background:#EEE; font-size:0px; word-spacing:0px; text-align:center; vertical-align:top; }
+.zdatepicker dt a,
+.zdatepicker dt .empty{ display:inline-block; width:10%; text-decoration:none; font-size:11px; color:#333; }
+.zdatepicker dt a:hover{ background:#CCC; color:#FFF; border-radius:5px; }
+.zdatepicker dt span{ display:inline-block; width:80%; font-size:12px; cursor:pointer; }
+.zdatepicker dt span a{ display:inline; width:auto; font-size:12px; font-weight:bold; color:#333; margin:0px 2px; text-decoration:underline; }
+.zdatepicker dt span a:hover{ background:none; color:#F05400; }
+.zdatepicker dd { width:100%; margin:0px; padding:0px; font-size:0px; word-spacing:-11px; text-align:left; vertical-align:top; text-align:left; }
+.zdatepicker dd div{ background:#FAFAFA; }
+.zdatepicker dd div span,
+.zdatepicker dd span{ display:inline-block; width:14%; height:25px; line-height:25px; font-size:12px; word-spacing:normal; text-align:center; color:#666; vertical-align:top; }
+.zdatepicker dd span a,
+.zdatepicker dd span span{ display:inline-block; width:100%; line-height:25px; text-decoration:none; color:#666; }
+.zdatepicker dd span a:hover{ opacity:0.5; filter:alpha(opacity=50); }
+.zdatepicker dd span .selected{ background:#FFFF88; }
+.zdatepicker dd span .disable{ color:#BBB; background:#EEE; }
+.zdatepicker dd span .area{ color:#F05400; background:#FFDFBF; }
+.zdatepicker dd .month,
+.zdatepicker dd .year { width:25%; height:50px; }
+.zdatepicker dd .month a,
+.zdatepicker dd .year a{ width:100%; height:50px; line-height:50px; overflow:hidden; }
+.zdatepicker dd .week0 { color:#FF4400; }
+.zdatepicker dd .week6 { color:#88CC00; }
+.zdatepicker .close { display:block; text-align:right; background:#EEE; width:100%; padding:2px 0px; }
+.zdatepicker .close a{ display:inline-block; font:12px/12px "Tahoma"; width:14px; height:14px; margin-right:5px; text-align:center; text-decoration:none; color:#333; }
+.zdatepicker .close a:hover{ background:#C00; color:#FFF; border-radius:5px; }

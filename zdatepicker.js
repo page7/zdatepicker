@@ -1,7 +1,7 @@
 /*!
- * icalendar (a smaller and easier datepicker of jquery plugin.)
- * http://www.nolanchou.com/icalendar
- * https://github.com/page7/icalendar
+ * zdatepicker (a smaller and easier datepicker of jquery plugin.)
+ * http://www.nolanchou.com/zdatepicker
+ * https://github.com/page7/zdatepicker
  *
  * Dual licensed under the MIT or GPL Version 2 licenses.
  * http://jquery.org/license
@@ -12,15 +12,16 @@
 
 ;(function ($) {
 
-$.fn.icalendar = function(options) {
+$.fn.zdatepicker = function(options) {
 
-	$.fn.icalendar.defaults = {
-		classname	: "icalendar",
+	$.fn.zdatepicker.defaults = {
+		classname	: "zdatepicker",
 		event		: "click",
 		viewmonths	: 2,
 		format		: {date:"yyyy-mm-dd",month:"yyyy-mm",year:"yyyy",onlymonth:"mm"}, //only support: yyyy-2014, mm-monthstr, dd-01. 1 digital date / 2 digital year / week please use "onReturn" to format.
 		daystr		: ["Sun","Mon","Tue","Wed","Thur","Fri","Sat"],
 		monthstr	: ["01","02","03","04","05","06","07","08","09","10","11","12"],
+		weekoffset	: 0,
 		year2str	: null,
 		str2year	: null,
 		initmonth	: null,
@@ -33,13 +34,16 @@ $.fn.icalendar = function(options) {
 		pos			: {},
 		use			: false,  // use option must be a jquery selector string. eq : #id or .class ..
 		show		: null,
+		prevArrow	: "&lt;",
+		nextArrow	: "&gt;",
 		closebtn	: false,
+		onFilter	: null,
 		onReturn	: null,
 	};
 
     var _init = false;
 
-	var opts = $.extend({}, $.fn.icalendar.defaults, options);
+	var opts = $.extend({}, $.fn.zdatepicker.defaults, options);
 
 	// record input's values
 	var selected = [];
@@ -188,7 +192,7 @@ $.fn.icalendar = function(options) {
 
 
 	// Check out a date is in AREA ( a date range of option:area or user change )
-	// One icalendar only have one AREA.
+	// One zdatepicker only have one AREA.
 	// Generally, AREA is made up of this input's value and the other input's value.
 	var isArea = function(year, month, day, area) {
 		var area = area ? area : opts.area;
@@ -269,7 +273,7 @@ $.fn.icalendar = function(options) {
 	};
 
 
-	// init icalendar
+	// init zdatepicker
 	var buildCalendar = function(obj) {
 		var input = $(obj);
 
@@ -320,7 +324,7 @@ $.fn.icalendar = function(options) {
 		// set z-index
 		calendar.css("z-index", new Date().getTime().toString().slice(-7,-3));
 
-		if(opts.symbiont) $(_calendars).hide();	// close other icalendars
+		if(opts.symbiont) $(_calendars).hide();	// close other zdatepickers
 		if(opts.show !== false) calendar.show();	// not need any event to show it
 
 		input.blur(function(){
@@ -353,7 +357,7 @@ $.fn.icalendar = function(options) {
 	}
 
 
-	// Fill content in icalendar
+	// Fill content in zdatepicker
 	var _build = function(obj, calendar, year, month, mode) {
 
 		var _index = opts.viewmonths % 2 ? ((opts.viewmonths - 1) / 2) : (opts.viewmonths / 2 - 1);
@@ -361,8 +365,8 @@ $.fn.icalendar = function(options) {
 		calendar.html("");
 		for(var i = 1; i<=opts.viewmonths; i++) {
 
-			var prev = i==1 ? '<a class="prev" href="javascript:;">&lt;</a>' : '<span class="empty">&nbsp;</span>';
-			var next = i==opts.viewmonths ? '<a class="next" href="javascript:;">&gt;</a>' : '<span class="empty">&nbsp;</span>';
+			var prev = i==1 ? '<a class="prev" href="javascript:;">'+opts.prevArrow+'</a>' : '<span class="empty">&nbsp;</span>';
+			var next = i==opts.viewmonths ? '<a class="next" href="javascript:;">'+opts.nextArrow+'</a>' : '<span class="empty">&nbsp;</span>';
 
 			// build date picker
 			if(mode == 'date'){
@@ -423,7 +427,7 @@ $.fn.icalendar = function(options) {
 
 			calendar.append("<dl><dt>"+prev+'<span>'+title+"</span>"+next+"</dt><dd>"+main+"</dd></dl>");
 		}
-		if(opts.closebtn) calendar.append('<dl class="close"><a href="javascript:;">x</a></dl>');
+		if(opts.closebtn) calendar.append('<dl class="close"><a href="javascript:;">'+(opts.closebtn === true ? 'x' : opts.closebtn)+'</a></dl>');
 
 		addEvent(obj, calendar, mode);
 
@@ -435,38 +439,45 @@ $.fn.icalendar = function(options) {
 	var _dateList = function(year, month, days) {
 		// get 1th in month
 		var temp = getDateObj([year, month, 1]);
-		var day = temp.getDay();
+		var first = temp.getDay();
+		var offset = opts.weekoffset;
 
-		// build week
+		// build weekstr view
 		var main = '<div>';
-		for(var i=0; i<=6; i++)
-			main += '<span class="week'+i+'">'+opts.daystr[i]+'</span>';
+		for(var i=0; i<=6; i++) {
+			var j = offset + i;
+			if(j > 6) j = j - 7;
+			main += '<span class="week'+j+'">'+opts.daystr[j]+'</span>';
+		}
 		main += '</div>';
 
 		// build space
-		for(var i=1; i<=day; i++){
-			var week = i % 7;
+		var prevdays = offset > first ? (7-offset+first) : (first-offset)
+		for(var i=0; i<prevdays; i++){
+			var week = (offset + i) % 7;
 			main += '<span class="empty week'+week+'"><span>&nbsp;</span></span>';
 		}
 
 		for(var i=1; i<=days; i++)
 		{
 			var id  = "ic_d_" + year + "-" + month + "-" + i;
-			var dis =  inRange(year, month, i, opts.disable);
-			var cla = "week" + ((day + i -1) % 7);
-			cla +=  inRange(year, month, i, selected) ? ' selected' : '';
-			cla +=  dis ?  ' disable' : '';
-			cla +=  isArea(year, month, i) ? ' area' : '';
-			cla = 'class="'+cla+'"';
+			var week  = (first + i - 1) % 7;
+			var cla =  [];
+			cla.push("week" + week);
+			if(inRange(year, month, i, selected)) cla.push('selected');
+			if(inRange(year, month, i, opts.disable))  cla.push('disable');
+			if(isArea(year, month, i)) cla.push('area');
+			if(opts.onFilter) cla = opts.onFilter(i, month, year, week, cla);
+			var classStr = 'class="'+cla.join(' ')+'"';
 			var str = dateReplace(year, month, i);
-			if(opts.readonly || dis)
-				main += '<span id="' + id + '" class="day"><span '+cla+'>' + str + '</span></span>';
+			if(opts.readonly || $.inArray('disable', cla) >= 0)
+				main += '<span id="' + id + '" class="day"><span ' + classStr + '>' + str + '</span></span>';
 			else
-				main += '<span id="' + id + '" class="day"><a ' + cla + ' href="javascript:;">' + str + '</a></span>';
+				main += '<span id="' + id + '" class="day"><a ' + classStr + ' href="javascript:;">' + str + '</a></span>';
 		}
 
 		// build space
-		for(var i=1; i<=7-((day+days)%7); i++)
+		for(var i=0; i<42-prevdays-days; i++)
 			main += '<span class="empty"><span>&nbsp;</span></span>';
 
 		return main;
@@ -503,7 +514,7 @@ $.fn.icalendar = function(options) {
 			opts.onReturn(date, dateObj, input, calendar, a, selected);
 		}else {
 			$(input).val(date);
-			$.fn.icalendar.callback('return', {date:date, dateobj:dateObj, input:input, calendar:calendar, a:a, selected:selected});
+			$.fn.zdatepicker.callback('return', {date:date, dateobj:dateObj, input:input, calendar:calendar, a:a, selected:selected});
 		}
 	}
 
@@ -530,7 +541,7 @@ $.fn.icalendar = function(options) {
 		// close
 		calendar.find(".close > a").click(function(){
 			calendar.hide();
-			$.fn.icalendar.callback("close", {input:obj, calendar:calendar, a:this});
+			$.fn.zdatepicker.callback("close", {input:obj, calendar:calendar, a:this});
 		});
 
 		if(mode == 'date') {
@@ -543,7 +554,7 @@ $.fn.icalendar = function(options) {
 					month = 12;
 				}
 				_build(obj, calendar, year, month, 'date');
-				$.fn.icalendar.callback("prev_month", {year:year, month:month, input:obj, calendar:calendar, a:this});
+				$.fn.zdatepicker.callback("prev_month", {year:year, month:month, input:obj, calendar:calendar, a:this});
 			});
 
 			// next month
@@ -555,7 +566,7 @@ $.fn.icalendar = function(options) {
 					month = 1;
 				}
 				_build(obj, calendar, year, month, 'date');
-				$.fn.icalendar.callback("next_month", {year:year, month:month, input:obj, calendar:calendar, a:this});
+				$.fn.zdatepicker.callback("next_month", {year:year, month:month, input:obj, calendar:calendar, a:this});
 			});
 
 			// return
@@ -611,14 +622,14 @@ $.fn.icalendar = function(options) {
 			calendar.find("dt .prev").click(function(){
 				var year = view[1] - 1;
 				_build(obj, calendar, year, 1, 'month');
-				$.fn.icalendar.callback("prev_year", {year:year, input:obj, calendar:calendar, a:this});
+				$.fn.zdatepicker.callback("prev_year", {year:year, input:obj, calendar:calendar, a:this});
 			});
 
 			// next 1 year
 			calendar.find("dt .next").click(function(){
 				var year = view[1] + 1;
 				_build(obj, calendar, year, 1, 'month');
-				$.fn.icalendar.callback("next_year", {year:year, input:obj, calendar:calendar, a:this});
+				$.fn.zdatepicker.callback("next_year", {year:year, input:obj, calendar:calendar, a:this});
 			});
 
 			// goto this month
@@ -627,7 +638,7 @@ $.fn.icalendar = function(options) {
 				var year = parseInt(_id[0], 10);
 				var month = parseInt(_id[1], 10);
 				_build(obj, calendar, year, month, 'date');
-				$.fn.icalendar.callback("select_month", {year:year, month:month, input:obj, calendar:calendar, a:this});
+				$.fn.zdatepicker.callback("select_month", {year:year, month:month, input:obj, calendar:calendar, a:this});
 			});
 		}
 		else if(mode == 'year') {
@@ -635,21 +646,21 @@ $.fn.icalendar = function(options) {
 			calendar.find("dt .prev").click(function(){
 				var year = view[1] - 10;
 				_build(obj, calendar, year, 1, 'year');
-				$.fn.icalendar.callback("prev_years", {year:year, input:obj, calendar:calendar, a:this});
+				$.fn.zdatepicker.callback("prev_years", {year:year, input:obj, calendar:calendar, a:this});
 			});
 
 			// next 10 years
 			calendar.find("dt .next").click(function(){
 				var year = view[1] + 10;
 				_build(obj, calendar, year, 1, 'year');
-				$.fn.icalendar.callback("next_years", {year:year, input:obj, calendar:calendar, a:this});
+				$.fn.zdatepicker.callback("next_years", {year:year, input:obj, calendar:calendar, a:this});
 			});
 
 			// goto this year
 			calendar.find("dd > :not(.close) > a").click(function(){
 				var year = parseInt($(this).attr("id").substr(5), 10);
 				_build(obj, calendar, year, viewChange[1], 'date');
-				$.fn.icalendar.callback("select_year", {year:year, input:obj, calendar:calendar, a:this});
+				$.fn.zdatepicker.callback("select_year", {year:year, input:obj, calendar:calendar, a:this});
 			});
 
 		}
@@ -671,7 +682,7 @@ $.fn.icalendar = function(options) {
 		if((type == 'end' && newArea[0] == '') || (type == 'start' && newArea[1] == '')) {
 			calendar.find(".area").removeClass("area");
 			a.addClass("area");
-			$.fn.icalendar.callback("area", {date:date, dateobj:dateObj, input:obj, calendar:calendar, a:a, area:newArea});
+			$.fn.zdatepicker.callback("area", {date:date, dateobj:dateObj, input:obj, calendar:calendar, a:a, area:newArea});
 			_return(date, dateObj, obj, calendar, a, selected);
 			return;
 		}
@@ -681,7 +692,7 @@ $.fn.icalendar = function(options) {
 			// remove AREA
 			calendar.find(".area").removeClass("area");
 			// callback
-			$.fn.icalendar.callback("fail_to_area", {date:date, dateobj:dateObj, input:obj, calendar:calendar, a:a, area:newArea});
+			$.fn.zdatepicker.callback("fail_to_area", {date:date, dateobj:dateObj, input:obj, calendar:calendar, a:a, area:newArea});
 			return;
 
 		}else{
@@ -716,7 +727,7 @@ $.fn.icalendar = function(options) {
 			}
 
 			if(start > end) {
-				$.fn.icalendar.callback("fail_to_area", {date:date, dateobj:dateObj, input:obj, calendar:calendar, a:a, area:newArea});
+				$.fn.zdatepicker.callback("fail_to_area", {date:date, dateobj:dateObj, input:obj, calendar:calendar, a:a, area:newArea});
 				return;
 			}
 
@@ -724,14 +735,14 @@ $.fn.icalendar = function(options) {
 			days.slice(end+1).children("a").removeClass("area");
 			days.slice(start, end).children("a").addClass("area");
 
-			$.fn.icalendar.callback("area", {date:date, dateobj:dateObj, input:obj, calendar:calendar, a:a, area:newArea});
+			$.fn.zdatepicker.callback("area", {date:date, dateobj:dateObj, input:obj, calendar:calendar, a:a, area:newArea});
 			_return(date, dateObj, obj, calendar, a, selected);
 		}
 	};
 
 
 
-	// init the dom for filling icalendar
+	// init the dom for filling zdatepicker
 	var _initialize = function(d){
 		if(!opts.use){
 			$(d).next("."+opts.classname).remove();
@@ -741,7 +752,7 @@ $.fn.icalendar = function(options) {
 		}
 
 		if(options !== undefined && options.format !== undefined)
-			opts.format = $.extend({}, $.fn.icalendar.defaults.format, options.format);
+			opts.format = $.extend({}, $.fn.zdatepicker.defaults.format, options.format);
 
 	};
 
@@ -758,15 +769,13 @@ $.fn.icalendar = function(options) {
 		if(opts.event) $(this).unbind(opts.event).bind(opts.event, function(){ buildCalendar(this); });
 
         _init = true;
-
-		return this;
 	});
 
 };
 
 
 // Callback
-$.fn.icalendar.callback = function(type, arg){ }
+$.fn.zdatepicker.callback = function(type, arg){ }
 
 
 
