@@ -47,9 +47,6 @@
             <a href="#style">Style</a>
         </li>
         <li>
-            <a href="#download">Download</a>
-        </li>
-        <li>
             <b>+</b><a href="#options">Options</a>
             <ul style="display:none;">
                 <li><a href="#classname">classname</a></li>
