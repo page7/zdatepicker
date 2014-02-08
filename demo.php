@@ -31,6 +31,7 @@
     .directory ul{ padding-left:20px; }
     .directory ul li{ font-size:14px; line-height:20px; width:100%; }
     .directory ul li ul li{ font-size:12px; }
+    .directory ul li b{ display:inline-block; color:#0080FF; width:10px; text-align:center; font-weight:normal; margin-right:2px; cursor:pointer; }
     </style>
     <link href="http://agorbatchev.typepad.com/pub/sh/3_0_83/styles/shCore.css" rel="stylesheet" type="text/css" />
     <link href="http://agorbatchev.typepad.com/pub/sh/3_0_83/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
@@ -46,17 +47,41 @@
             <a href="#style">Style</a>
         </li>
         <li>
-            <a href="#options">Options</a>
+            <b>+</b><a href="#options">Options</a>
+            <ul style="display:none;">
+                <li><a href="#classname">classname</a></li>
+                <li><a href="#event">event</a></li>
+                <li><a href="#viewmonths">viewmonths</a></li>
+                <li><a href="#format">format</a></li>
+                <li><a href="#daystr">daystr</a></li>
+                <li><a href="#monthstr">monthstr</a></li>
+                <li><a href="#weekoffset">weekoffset</a></li>
+                <li><a href="#year2str">year2str</a></li>
+                <li><a href="#str2year">str2year</a></li>
+                <li><a href="#initmonth">initmonth</a></li>
+                <li><a href="#symbiont">symbiont</a></li>
+                <li><a href="#readonly">readonly</a></li>
+                <li><a href="#disable">disable</a></li>
+                <li><a href="#area">area</a></li>
+                <li><a href="#selected">selected</a></li>
+                <li><a href="#replace">replace</a></li>
+                <li><a href="#pos">pos</a></li>
+                <li><a href="#use">use</a></li>
+                <li><a href="#show">show</a></li>
+                <li><a href="#closebtn">closebtn</a></li>
+                <li><a href="#onFilter">onFilter</a></li>
+                <li><a href="#onReturn">onReturn</a></li>
+            </ul>
         </li>
         <li>
-            <a href="#callback">Callback</a>
-            <ul>
+            <b>+</b><a href="#callback">Callback</a>
+            <ul style="display:none;">
                 <li><a href="#type">parameter - type</a></li>
                 <li><a href="#arg">parameter - arg</a></li>
             </ul>
         </li>
         <li>
-            <a href="#demo">Demo</a>
+            <b>-</b><a href="#demo">Demo</a>
             <ul>
                 <li><a href="#demo_1-1">Simple</a></li>
                 <li><a href="#demo_1-2">Show one month.</a></li>
@@ -162,7 +187,7 @@
     <li>default:["01","02","03","04","05","06","07","08","09","10","11","12"]</li>
 </ul>
 
-<h5 id="monthstr">weekoffset</h5>
+<h5 id="weekoffset">weekoffset</h5>
 <ul>
     <li class="note">Select the day to start the week from. Default option is Sunday(0), but you can start a week on Friday if you want to by setting this option to 5.</li>
     <li>type:number</li>
@@ -258,7 +283,7 @@
     <li>default:false</li>
 </ul>
 
-<h5 id="onReturn">onFilter</h5>
+<h5 id="onFilter">onFilter</h5>
 <ul>
     <li class="note">filter date status(disable? selected? area?). 5 args(date, month, year, day, status), return array.</li>
     <li>type:function</li>
@@ -999,6 +1024,12 @@ $(function(){
 
     $(window).resize(function(){
         $(".directory").height($(window).height());
+    });
+
+    $(".directory>ul>li>b").click(function(){
+        var ul = $(this).next("a").next("ul");
+        ul.toggle();
+        $(this).text((ul.is(":visible") ? "-" : "+"));
     });
 })
 </script>
