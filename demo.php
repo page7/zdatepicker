@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>DOC &amp; DEMO - zdatepicker - a simple,light-weight datepicker plugin for jquery.</title>
     <meta name="keywords" content="zdatepicker,js,jquery,plugin,datepicker,calendar,NolanChou 周" />
-    <meta name="description" content="zdatepicker - a smaller and easier datepicker of jquery plugin." />
+    <meta name="description" content="zdatepicker - a simple,light-weight datepicker plugin for jquery." />
     <meta name="generator" content="Jquery" />
 
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
@@ -47,6 +47,9 @@
             <a href="#style">Style</a>
         </li>
         <li>
+            <a href="#download">Download</a>
+        </li>
+        <li>
             <b>+</b><a href="#options">Options</a>
             <ul style="display:none;">
                 <li><a href="#classname">classname</a></li>
@@ -68,6 +71,8 @@
                 <li><a href="#pos">pos</a></li>
                 <li><a href="#use">use</a></li>
                 <li><a href="#show">show</a></li>
+                <li><a href="#prevbtn">prevbtn</a></li>
+                <li><a href="#nextbtn">nextbtn</a></li>
                 <li><a href="#closebtn">closebtn</a></li>
                 <li><a href="#onFilter">onFilter</a></li>
                 <li><a href="#onReturn">onReturn</a></li>
@@ -276,16 +281,30 @@
     <li>default:null</li>
 </ul>
 
+<h5 id="prevbtn">prevbtn</h5>
+<ul>
+    <li class="note">previous button</li>
+    <li>type:string</li>
+    <li>default:&lt;</li>
+</ul>
+
+<h5 id="nextbtn">nextbtn</h5>
+<ul>
+    <li class="note">next button</li>
+    <li>type:string</li>
+    <li>default:&gt;</li>
+</ul>
+
 <h5 id="closebtn">closebtn</h5>
 <ul>
-    <li class="note">show close button.</li>
-    <li>type:boolean</li>
+    <li class="note">close button</li>
+    <li>type:boolean/string</li>
     <li>default:false</li>
 </ul>
 
 <h5 id="onFilter">onFilter</h5>
 <ul>
-    <li class="note">filter date status(disable? selected? area?). 5 args(date, month, year, day, status), return array.</li>
+    <li class="note">filter date status(disable? selected? other?). 5 args(date, month, year, day, status), return array.</li>
     <li>type:function</li>
     <li>default:null</li>
 </ul>

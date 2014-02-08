@@ -3,11 +3,11 @@
  * http://www.nolanchou.com/zdatepicker
  * https://github.com/page7/zdatepicker
  *
- * Dual licensed under the MIT or GPL Version 2 licenses.
+ * Dual licensed under the MIT licenses.
  * http://jquery.org/license
  *
- * Version:3.0.1
- * Date:2014-01-31
+ * Version:3.1.1
+ * Date:2014-02
  */
 
 ;(function ($) {
@@ -34,8 +34,8 @@ $.fn.zdatepicker = function(options) {
 		pos			: {},
 		use			: false,  // use option must be a jquery selector string. eq : #id or .class ..
 		show		: null,
-		prevArrow	: "&lt;",
-		nextArrow	: "&gt;",
+		prevbtn		: "&lt;",
+		nextbtn		: "&gt;",
 		closebtn	: false,
 		onFilter	: null,
 		onReturn	: null
@@ -365,8 +365,8 @@ $.fn.zdatepicker = function(options) {
 		calendar.html("");
 		for(var i = 1; i<=opts.viewmonths; i++) {
 
-			var prev = i==1 ? '<a class="prev" href="javascript:;">'+opts.prevArrow+'</a>' : '<span class="empty">&nbsp;</span>';
-			var next = i==opts.viewmonths ? '<a class="next" href="javascript:;">'+opts.nextArrow+'</a>' : '<span class="empty">&nbsp;</span>';
+			var prev = i==1 ? '<a class="prev" href="javascript:;">'+opts.prevbtn+'</a>' : '<span class="empty">&nbsp;</span>';
+			var next = i==opts.viewmonths ? '<a class="next" href="javascript:;">'+opts.nextbtn+'</a>' : '<span class="empty">&nbsp;</span>';
 
 			// build date picker
 			if(mode == 'date'){
