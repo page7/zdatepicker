@@ -38,7 +38,7 @@ $.fn.zdatepicker = function(options) {
 		nextArrow	: "&gt;",
 		closebtn	: false,
 		onFilter	: null,
-		onReturn	: null,
+		onReturn	: null
 	};
 
     var _init = false;
@@ -354,7 +354,7 @@ $.fn.zdatepicker = function(options) {
 			case 'onlymonth':
 				return opts.format.onlymonth.replace(/mm/, opts.monthstr[data-1]);
 		}
-	}
+	};
 
 
 	// Fill content in zdatepicker
@@ -516,7 +516,7 @@ $.fn.zdatepicker = function(options) {
 			$(input).val(date);
 			$.fn.zdatepicker.callback('return', {date:date, dateobj:dateObj, input:input, calendar:calendar, a:a, selected:selected});
 		}
-	}
+	};
 
 	// Bind Event
 	var addEvent = function(obj, calendar, mode) {

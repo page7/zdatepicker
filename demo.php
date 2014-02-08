@@ -2,12 +2,12 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>DEMO - zdatepicker - a simple,light-weight datepicker plugin for jquery.</title>
+    <title>DOC &amp; DEMO - zdatepicker - a simple,light-weight datepicker plugin for jquery.</title>
     <meta name="keywords" content="zdatepicker,js,jquery,plugin,datepicker,calendar,NolanChou 周" />
     <meta name="description" content="zdatepicker - a smaller and easier datepicker of jquery plugin." />
     <meta name="generator" content="Jquery" />
 
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="./zdatepicker.js"></script>
 
     <style type="text/css">
@@ -85,7 +85,7 @@
     </ul>
 </div>
 
-<h1>DEMO - zdatepicker</h1>
+<h1>DOC &amp; DEMO - zdatepicker</h1>
 
 <h2 id="style">Style</h2>
 <pre class="brush:css; toolbar:false;">
