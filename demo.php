@@ -32,6 +32,7 @@
     .directory ul li{ font-size:14px; line-height:20px; width:100%; }
     .directory ul li ul li{ font-size:12px; }
     .directory ul li b{ display:inline-block; color:#0080FF; width:10px; text-align:center; font-weight:normal; margin-right:2px; cursor:pointer; }
+    .directory .new{ font-size:12px; line-height:100%; display:inline-block; padding:2px 5px; background:#E00; color:#FFF; margin-left:2px; margin-top:-5px; border-radius:5px 5px 5px 0px; }
     </style>
     <link href="http://agorbatchev.typepad.com/pub/sh/3_0_83/styles/shCore.css" rel="stylesheet" type="text/css" />
     <link href="http://agorbatchev.typepad.com/pub/sh/3_0_83/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
@@ -68,10 +69,10 @@
                 <li><a href="#pos">pos</a></li>
                 <li><a href="#use">use</a></li>
                 <li><a href="#show">show</a></li>
-                <li><a href="#prevbtn">prevbtn</a></li>
-                <li><a href="#nextbtn">nextbtn</a></li>
+                <li><a href="#prevbtn">prevbtn</a><em class="new">new</em></li>
+                <li><a href="#nextbtn">nextbtn</a><em class="new">new</em></li>
                 <li><a href="#closebtn">closebtn</a></li>
-                <li><a href="#onFilter">onFilter</a></li>
+                <li><a href="#onFilter">onFilter</a><em class="new">new</em></li>
                 <li><a href="#onReturn">onReturn</a></li>
             </ul>
         </li>
@@ -105,8 +106,9 @@
                 <li><a href="#demo_13">Change Event for show zdatepicker.</a></li>
                 <li><a href="#demo_14-1">Date format</a></li>
                 <li><a href="#demo_14-2">Special era</a></li>
+                <li><a href="#demo_14-3">i18n</a><em class="new">new</em></li>
                 <li><a href="#demo_15">Replace return function, and use callback.</a></li>
-                <li><a href="#demo_16">Advanced setting for date's status.</a></li>
+                <li><a href="#demo_16">Advanced setting for date's status.</a><em class="new">new</em></li>
             </ul>
         </li>
     </ul>
@@ -950,6 +952,51 @@
         });
         </script>
     </div>
+</div>
+
+
+
+<h4 id="demo_14-3">14-3. i18n</h4>
+<div class="demo">
+    <input class="time14_3" value="" />
+
+    <div class="code">
+        <h5>Code：</h5>
+        <pre class="brush:js; toolbar:false;" style="height:400px;">
+        $(".time14_3").zdatepicker({
+            /* French */
+            format:{date:"dd,mm\/yyyy", month:"mm\/yyyy", year:"yyyy", onlymonth:"mm"},
+            daystr:["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"],
+            monthstr:["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Décembre"]
+            /* German */
+            //daystr:["So","Mo","Di","Mi","Do","Fr","Sa"],
+            //monthstr:["Januar","Februar","Maerz","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"]
+            /* Japan */
+            //daystr:["日","月","火","水","木","金","土"],
+            //monthstr:["睦月","如月","弥生","卯月","皐月","水无月","文月","叶月","长月","神无月","霜月","师走"]
+            /* China */
+            //daystr:["日","一","二","三","四","五","六"],
+            //monthstr:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]
+        });
+        </pre>
+    </div>
+        <script type="text/javascript">
+        $(".time14_3").zdatepicker({
+            /* French */
+            format:{date:"dd,mm\/yyyy", month:"mm\/yyyy", year:"yyyy", onlymonth:"mm"},
+            daystr:["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"],
+            monthstr:["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Décembre"]
+            /* German */
+            //daystr:["So","Mo","Di","Mi","Do","Fr","Sa"],
+            //monthstr:["Januar","Februar","Maerz","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"]
+            /* Japan */
+            //daystr:["日","月","火","水","木","金","土"],
+            //monthstr:["睦月","如月","弥生","卯月","皐月","水无月","文月","叶月","长月","神无月","霜月","师走"]
+            /* China */
+            //daystr:["日","一","二","三","四","五","六"],
+            //monthstr:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]
+        });
+        </script>
 </div>
 
 
