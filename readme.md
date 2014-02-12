@@ -1,10 +1,10 @@
 <h2>zdatepicker - a simple,light-weight datepicker plugin for jquery</h2>
 
-<h3>中文地址</h3>
-<a href="http://www.nolanchou.com/zdatepicker/" target="_blank">点击这里</a>
+<h3>中文文档</h3>
+<a href="http://www.nolanchou.com/zdatepicker/demo_zh.php" target="_blank">点击这里</a>
 <br />
 
-<h3>DEMO</h3>
+<h3>DOC & DEMO</h3>
 <a href="http://www.nolanchou.com/zdatepicker/demo.php" target="_blank">Demo.</a>
 <br />
 
@@ -67,14 +67,14 @@ Contributor：page7<br />
 <h4>1.0.6</h4>
 Date：2012-06-13<br />
 Contributor：page7<br />
-	　1.Update：Use php in demo.<br />
+	　1.Update：Use php for demo.<br />
 	　2.Fix bug：Set option - selected default value to false.<br />
 <br />
 
 <h4>1.0.5</h4>
 Date：2012-03-30<br />
 Contributor：page7<br />
-	　1.Update：If set option - selected, load selected values first。<br />
+	　1.Update：If set option - selected, load selected values first.<br />
 	　2.Update：option - event is empty that be allow.<br />
 	　3.Add：Add a demo about plugin's method onReturn.<br />
 	　4.Add：Rewrite icalendar.onReturn or icalendar.callback to do sth for date or dom.<br />
