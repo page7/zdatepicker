@@ -6,8 +6,8 @@
  * Dual licensed under the MIT licenses.
  * http://jquery.org/license
  *
- * Version:3.1.2
- * Date:2014-02
+ * Version:3.1.3
+ * Date:2014-09
  */
 
 ;(function ($) {
@@ -460,7 +460,8 @@ $.fn.zdatepicker = function(options) {
 
 		for(var i=1; i<=days; i++)
 		{
-			var id  = "ic_d_" + year + "-" + month + "-" + i;
+			var date = year + "-" + month + "-" + i;
+			var id  = "ic_d_" + date;
 			var week  = (first + i - 1) % 7;
 			var cla =  [];
 			cla.push("week" + week);
@@ -471,9 +472,9 @@ $.fn.zdatepicker = function(options) {
 			var classStr = 'class="'+cla.join(' ')+'"';
 			var str = dateReplace(year, month, i);
 			if(opts.readonly || $.inArray('disable', cla) >= 0)
-				main += '<span id="' + id + '" class="day"><span ' + classStr + '>' + str + '</span></span>';
+				main += '<span id="' + id + '" class="day" data-date="' + date + '"><span ' + classStr + '>' + str + '</span></span>';
 			else
-				main += '<span id="' + id + '" class="day"><a ' + classStr + ' href="javascript:;">' + str + '</a></span>';
+				main += '<span id="' + id + '" class="day" data-date="' + date + '"><a ' + classStr + ' href="javascript:;">' + str + '</a></span>';
 		}
 
 		// build space
@@ -711,7 +712,7 @@ $.fn.zdatepicker = function(options) {
 					start = days.index(calendar.find("#ic_d_"+newAreaJoin[0]));
 					if(start == -1) {
 						var _start = getDateObj(newArea[0]);
-						var _first = getDateObj(firstDate);
+						var _first = getDateObj(calendar.find(".day:first").data("date").split('-'));
 						if(_start.getTime() < _first.getTime())
 							start = 0;
 					}
@@ -719,7 +720,7 @@ $.fn.zdatepicker = function(options) {
 					end = days.index(calendar.find("#ic_d_"+newAreaJoin[1]));
 					if(end == -1) {
 						var _end = getDateObj(newArea[1]);
-						var _last = getDateObj(lastDate);
+						var _last = getDateObj(calendar.find(".day:last").data("date").split('-'));
 						if(_end.getTime() > _last.getTime())
 							end = days.length - 1;
 					}
