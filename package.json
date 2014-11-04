@@ -1,0 +1,27 @@
+{
+	"name": "zdatepicker.js",
+	"description": "a simple,light-weight datepicker plugin for jquery.",
+	"keywords": [
+		"jquery-plugin",
+		"datepicker",
+		"i18n",
+		"era",
+		"multiple"
+	],
+	"version": "3.1.9",
+	"dependencies": {
+		"jquery": ">=1.6.0"
+	},
+	"author": "Nolan Chou (https://github.com/page7)",
+	"license": "MIT",
+	"main": "zdatepicker.js",
+	"homepage": "www.nolanchou.com/zdatepicker/demo.php",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/page7/zdatepicker.git"
+	},
+	"bugs": {
+		"url": "https://github.com/page7/zdatepicker/issues",
+		"email": "zhounan0120@gmail.com"
+	}
+}

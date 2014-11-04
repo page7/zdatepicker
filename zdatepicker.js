@@ -6,8 +6,8 @@
  * Dual licensed under the MIT licenses.
  * http://jquery.org/license
  *
- * Version:3.1.3
- * Date:2014-09
+ * Version:3.1.9
+ * Date:2014-11
  */
 
 ;(function ($) {
@@ -18,7 +18,7 @@ $.fn.zdatepicker = function(options) {
 		classname	: "zdatepicker",
 		event		: "click",
 		viewmonths	: 2,
-		format		: {date:"yyyy-mm-dd",month:"yyyy-mm",year:"yyyy",onlymonth:"mm"}, //only support: yyyy-2014, mm-monthstr, dd-01. 1 digital date / 2 digital year / week please use "onReturn" to format.
+		format		: {date:"yyyy-mm-dd",month:"yyyy mm",year:"yyyy",onlymonth:"mm"}, //only support: yyyy-2014, mm-monthstr, dd-01. 1 digital date / 2 digital year / week please use "onReturn" to format.
 		daystr		: ["Sun","Mon","Tue","Wed","Thur","Fri","Sat"],
 		monthstr	: ["01","02","03","04","05","06","07","08","09","10","11","12"],
 		weekoffset	: 0,
@@ -34,14 +34,14 @@ $.fn.zdatepicker = function(options) {
 		pos			: {},
 		use			: false,  // use option must be a jquery selector string. eq : #id or .class ..
 		show		: null,
-		prevbtn		: "&lt;",
-		nextbtn		: "&gt;",
+		prevbtn		: "",
+		nextbtn		: "",
 		closebtn	: false,
 		onFilter	: null,
 		onReturn	: null
 	};
 
-    var _init = false;
+	var _init = false;
 
 	var opts = $.extend({}, $.fn.zdatepicker.defaults, options);
 
@@ -311,7 +311,7 @@ $.fn.zdatepicker = function(options) {
 		_build(obj, calendar, year, month, 'date');
 
 		// set width
-		calendar.width(input.data("ic_width") * opts.viewmonths);
+		calendar.width(input.data("zdatepicker_width") * opts.viewmonths);
 		// set position
 		var _outHeight = input.outerHeight();
 		var _outWidth = input.outerWidth();
@@ -346,8 +346,8 @@ $.fn.zdatepicker = function(options) {
 				return string;
 			case 'month':
 				var string = opts.format.month;
-					string = string.replace(/yyyy/, '<a class="year" id="ic_y_'+data[0]+'" href="javascript:;">'+(opts.year2str ? opts.year2str(data[0]) : data[0])+"</a>");
-					string = string.replace(/mm/, '<a class="month" id="ic_m_'+data[1]+'" href="javascript:;">'+(opts.monthstr[data[1]-1])+"</a>");
+					string = string.replace(/yyyy/, '<a class="year" id="zdatepicker_y_'+data[0]+'" href="javascript:;">'+(opts.year2str ? opts.year2str(data[0]) : data[0])+"</a>");
+					string = string.replace(/mm/, '<a class="month" id="zdatepicker_m_'+data[1]+'" href="javascript:;">'+(opts.monthstr[data[1]-1])+"</a>");
 				return string;
 			case 'year':
 				return opts.format.year.replace(/yyyy/, (opts.year2str ? opts.year2str(data) : data));
@@ -398,7 +398,7 @@ $.fn.zdatepicker = function(options) {
 			// build month picker
 			else if(mode == 'month') {
 				var _year = (year + (i-_index-1));
-				var title = '<a class="year" id="ic_y_'+_year+'" href="javascript:;">' + _format('year', _year) + '</a>';
+				var title = '<a class="year" id="zdatepicker_y_'+_year+'" href="javascript:;">' + _format('year', _year) + '</a>';
 
 				if(i == 1) {
 					view = ['month', _year];
@@ -427,7 +427,7 @@ $.fn.zdatepicker = function(options) {
 
 			calendar.append("<dl><dt>"+prev+'<span>'+title+"</span>"+next+"</dt><dd>"+main+"</dd></dl>");
 		}
-		if(opts.closebtn) calendar.append('<dl class="close"><a href="javascript:;">'+(opts.closebtn === true ? 'x' : opts.closebtn)+'</a></dl>');
+		if(opts.closebtn !== false) calendar.append('<dl class="close"><a href="javascript:;">'+(opts.closebtn === true ? 'x' : opts.closebtn)+'</a></dl>');
 
 		addEvent(obj, calendar, mode);
 
@@ -453,15 +453,14 @@ $.fn.zdatepicker = function(options) {
 
 		// build space
 		var prevdays = offset > first ? (7-offset+first) : (first-offset)
-		for(var i=0; i<prevdays; i++){
+		for(var i=0; i<prevdays; i++) {
 			var week = (offset + i) % 7;
 			main += '<span class="empty week'+week+'"><span>&nbsp;</span></span>';
 		}
 
-		for(var i=1; i<=days; i++)
-		{
+		for(var i=1; i<=days; i++) {
 			var date = year + "-" + month + "-" + i;
-			var id  = "ic_d_" + date;
+			var id  = "zdatepicker_d_" + date;
 			var week  = (first + i - 1) % 7;
 			var cla =  [];
 			cla.push("week" + week);
@@ -491,7 +490,7 @@ $.fn.zdatepicker = function(options) {
 		var main = '';
 		for(var i = 1; i <= 12; i ++) {
 			cla = (year == selyear && i == selmonth) ? 'class="selected"' : '';
-			main += '<span class="month"><a id="ic_d_' + year + '-' + i + '" ' + cla + ' href="javascript:;">' + _format('onlymonth', i) + '</a></span>';
+			main += '<span class="month"><a id="zdatepicker_d_' + year + '-' + i + '" data-month="' + year + '-' + i + '" ' + cla + ' href="javascript:;">' + _format('onlymonth', i) + '</a></span>';
 		}
 		return main;
 	};
@@ -503,7 +502,7 @@ $.fn.zdatepicker = function(options) {
 		var main = cla = '';
 		for(var i = start; i < start + 10; i++) {
 			cla = i == select ? 'class="selected"' : '';
-			main += '<span class="year"><a id="ic_d_' + i + '" ' + cla + ' href="javascript:;">' + _format('year', i) + '</a></span>';
+			main += '<span class="year"><a id="zdatepicker_d_' + i + '" data-year="'+i+'" ' + cla + ' href="javascript:;">' + _format('year', i) + '</a></span>';
 		}
 		return main;
 	};
@@ -535,7 +534,7 @@ $.fn.zdatepicker = function(options) {
 
 		// select year
 		calendar.find("dt .year").bind("click", function(){
-			var year = parseInt($(this).attr("id").substr(5), 10);
+			var year = parseInt($(this).data("year"), 10);
 			_build(obj, calendar, view[1], 1, 'year');
 		});
 
@@ -578,16 +577,14 @@ $.fn.zdatepicker = function(options) {
 					calendar.find(".selected").removeClass("selected");
 					select = false;
 				}
-				$(this).toggleClass("selected");
 
 				// get date
-				var date = $(this).parent().attr("id").substr(5);
+				var date = $(this).parent().data("date");
 				var datearr = toArray(date);
 				var dateObj = getDateObj(datearr);
 				date = _format('date', datearr);
 
 				// change selected value
-				lastSelected = $(this).is(".selected") ? date : null;
 				if(select) {
 					if($(this).is(".selected")){
 						selected.unshift(date);
@@ -605,6 +602,9 @@ $.fn.zdatepicker = function(options) {
 
 				// Area
 				if($.isEmptyObject(opts.area)) {
+					$(this).toggleClass("selected");
+					lastSelected = $(this).is(".selected") ? date : null;
+
 					_return(date, dateObj, obj, calendar, this, selected);
 				}else{
 					if(!opts.area[0]) {
@@ -635,7 +635,7 @@ $.fn.zdatepicker = function(options) {
 
 			// goto this month
 			calendar.find("dd > :not(.close) > a").click(function(){
-				var _id = $(this).attr("id").substr(5).split("-");
+				var _id = $(this).data("month").split("-");
 				var year = parseInt(_id[0], 10);
 				var month = parseInt(_id[1], 10);
 				_build(obj, calendar, year, month, 'date');
@@ -659,7 +659,7 @@ $.fn.zdatepicker = function(options) {
 
 			// goto this year
 			calendar.find("dd > :not(.close) > a").click(function(){
-				var year = parseInt($(this).attr("id").substr(5), 10);
+				var year = parseInt($(this).data("year"), 10);
 				_build(obj, calendar, year, viewChange[1], 'date');
 				$.fn.zdatepicker.callback("select_year", {year:year, input:obj, calendar:calendar, a:this});
 			});
@@ -682,7 +682,7 @@ $.fn.zdatepicker = function(options) {
 		// one of option values is empty
 		if((type == 'end' && newArea[0] == '') || (type == 'start' && newArea[1] == '')) {
 			calendar.find(".area").removeClass("area");
-			a.addClass("area");
+			a.addClass("area selected");
 			$.fn.zdatepicker.callback("area", {date:date, dateobj:dateObj, input:obj, calendar:calendar, a:a, area:newArea});
 			_return(date, dateObj, obj, calendar, a, selected);
 			return;
@@ -709,7 +709,7 @@ $.fn.zdatepicker = function(options) {
 
 			if(start == end && newArea[0].join('-') != newArea[1].join('-')) {
 				if(type == 'end') {
-					start = days.index(calendar.find("#ic_d_"+newAreaJoin[0]));
+					start = days.index(calendar.find("#zdatepicker_d_"+newAreaJoin[0]));
 					if(start == -1) {
 						var _start = getDateObj(newArea[0]);
 						var _first = getDateObj(calendar.find(".day:first").data("date").split('-'));
@@ -717,7 +717,7 @@ $.fn.zdatepicker = function(options) {
 							start = 0;
 					}
 				}else{
-					end = days.index(calendar.find("#ic_d_"+newAreaJoin[1]));
+					end = days.index(calendar.find("#zdatepicker_d_"+newAreaJoin[1]));
 					if(end == -1) {
 						var _end = getDateObj(newArea[1]);
 						var _last = getDateObj(calendar.find(".day:last").data("date").split('-'));
@@ -728,6 +728,7 @@ $.fn.zdatepicker = function(options) {
 			}
 
 			if(start > end) {
+				a.removeClass("area");
 				$.fn.zdatepicker.callback("fail_to_area", {date:date, dateobj:dateObj, input:obj, calendar:calendar, a:a, area:newArea});
 				return;
 			}
@@ -735,6 +736,7 @@ $.fn.zdatepicker = function(options) {
 			days.slice(0, start).children("a").removeClass("area");
 			days.slice(end+1).children("a").removeClass("area");
 			days.slice(start, end).children("a").addClass("area");
+			a.addClass("selected");
 
 			$.fn.zdatepicker.callback("area", {date:date, dateobj:dateObj, input:obj, calendar:calendar, a:a, area:newArea});
 			_return(date, dateObj, obj, calendar, a, selected);
@@ -749,7 +751,7 @@ $.fn.zdatepicker = function(options) {
 			$(d).next("."+opts.classname).remove();
 			$(d).after('<div class="'+opts.classname+'"></div>');
 			var c = $(d).next("."+opts.classname);
-			$(d).data("ic_width", c.width());
+			$(d).data("zdatepicker_width", c.width());
 		}
 
 		if(options !== undefined && options.format !== undefined)
@@ -769,7 +771,7 @@ $.fn.zdatepicker = function(options) {
 		// option:event is empty
 		if(opts.event) $(this).unbind(opts.event).bind(opts.event, function(){ buildCalendar(this); });
 
-        _init = true;
+		_init = true;
 	});
 
 };

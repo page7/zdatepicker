@@ -8,7 +8,7 @@
     <meta name="generator" content="Jquery" />
 
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="./zdatepicker.js"></script>
+    <script type="text/javascript" src="./zdatepicker.js?v=3.1.9"></script>
 
     <style type="text/css">
     body{ font:12px/120% Helvetica, Geneva, Arial, sans-serif; padding:0px 30px; margin:0px; margin-left:250px; box-shadow:inset 5px 0px 5px #EEE; }
@@ -34,9 +34,11 @@
     .directory ul li b{ display:inline-block; color:#0080FF; width:10px; text-align:center; font-weight:normal; margin-right:2px; cursor:pointer; }
     .directory .new{ font-size:12px; line-height:100%; display:inline-block; padding:2px 5px; background:#E00; color:#FFF; margin-left:2px; margin-top:-5px; border-radius:5px 5px 5px 0px; }
     </style>
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
     <link href="http://agorbatchev.typepad.com/pub/sh/3_0_83/styles/shCore.css" rel="stylesheet" type="text/css" />
     <link href="http://agorbatchev.typepad.com/pub/sh/3_0_83/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
-    <link type="text/css" rel="stylesheet" href="./zdatepicker.css" />
+    <link type="text/css" rel="stylesheet" href="./zdatepicker.css?v=3.1.9" />
 </head>
 
 <body>
@@ -117,36 +119,71 @@
 <h1>DOC &amp; DEMO - zdatepicker</h1>
 
 <h2 id="style">Style</h2>
+<p>You can rewrite all of these:</p>
 <pre class="brush:css; toolbar:false;">
-/* You Can Rewrite These */
-.zdatepicker{ position:absolute; width:210px; z-index:9998; display:none; background:#FFF; border:#999 solid 1px; overflow:hidden; margin:1px 0px; border-radius:5px; box-shadow:2px 2px 6px #CCC; }
-.zdatepicker dl{ width:208px; margin:0px; padding:1px; display:block; float:left;}
-.zdatepicker dt{ width:100%; height:25px; line-height:25px; background:#EEE; font-size:0px; word-spacing:0px; text-align:center; vertical-align:top; }
+/* zdatepicker main */
+.zdatepicker{ position:absolute; width:280px; z-index:9998; display:none; overflow:hidden; margin:2px 0px; background:#FFF; border:1px solid rgba(0,0,0,.15); border-radius:5px; box-shadow:0 6px 12px rgba(0,0,0,.175); }
+.zdatepicker dl{ width:278px; margin:0px; padding:1px; display:block; float:left; }
+
+/* zdatepicker title (prev/next button) */
+.zdatepicker dt{ width:100%; height:35px; line-height:35px; background:#fff; font-size:0px; font-weight:normal; word-spacing:0px; text-align:center; vertical-align:top; }
 .zdatepicker dt a,
-.zdatepicker dt .empty{ display:inline-block; width:10%; text-decoration:none; font-size:11px; color:#333; }
-.zdatepicker dt a:hover{ background:#CCC; color:#FFF; border-radius:5px; }
-.zdatepicker dt span{ display:inline-block; width:80%; font-size:12px; cursor:pointer; }
-.zdatepicker dt span a{ display:inline; width:auto; font-size:12px; font-weight:bold; color:#333; margin:0px 2px; text-decoration:underline; }
-.zdatepicker dt span a:hover{ background:none; color:#F05400; }
-.zdatepicker dd { width:100%; margin:0px; padding:0px; font-size:0px; word-spacing:-11px; text-align:left; vertical-align:top; text-align:left; }
-.zdatepicker dd div{ background:#FAFAFA; }
+.zdatepicker dt .empty{ display:inline-block; width:10%; text-decoration:none; font-size:14px; color:#333; margin:0px; vertical-align:top; }
+.zdatepicker dt a:hover{ background:#eee; color:#333; }
+.zdatepicker dt .prev,
+.zdatepicker dt .next { font-family:FontAwesome; font-weight:normal; color:#666; }
+.zdatepicker dt .prev:before { content:"\f0d9"; }
+.zdatepicker dt .next:before { content:"\f0da"; }
+
+/* zdatepicker title (year/month) */
+.zdatepicker dt span { display:inline-block; width:80%; font-size:14px; cursor:pointer; }
+.zdatepicker dt span a { display:inline-block; width:auto; padding:0px 5px; font-size:14px; color:#333; margin:0px 2px; }
+.zdatepicker dt span a:after { font-family:FontAwesome; font-size:12px; content:"\f0d7"; margin-left:2px; }
+
+/* zdatepicker main */
+.zdatepicker dd { width:98%; padding:0px 2px; padding:0 0 5px 0; font-size:0px; word-spacing:-11px; text-align:left; }
+
+/* zdatepicker sub-title (week) */
+.zdatepicker dd div { background:#fff; margin-bottom:3px; }
 .zdatepicker dd div span,
-.zdatepicker dd span{ display:inline-block; width:14%; height:25px; line-height:25px; font-size:12px; word-spacing:normal; text-align:center; color:#666; vertical-align:top; }
+.zdatepicker dd span { display:inline-block; width:14%; height:35px; line-height:32px; font-size:14px; word-spacing:normal; text-align:center; color:#666; vertical-align:top; }
+.zdatepicker dd div span { font-size:12px; height:25px; line-height:25px; }
+
+/* zdatepicker body */
 .zdatepicker dd span a,
-.zdatepicker dd span span{ display:inline-block; width:100%; line-height:25px; text-decoration:none; color:#666; }
-.zdatepicker dd span a:hover{ opacity:0.5; filter:alpha(opacity=50); }
-.zdatepicker dd span .selected{ background:#FFFF88; }
-.zdatepicker dd span .disable{ color:#BBB; background:#EEE; }
-.zdatepicker dd span .area{ color:#F05400; background:#FFDFBF; }
+.zdatepicker dd span span { display:inline-block; width:100%; line-height:33px; margin-top:1px; text-decoration:none; color:#666; }
+.zdatepicker dd span a:hover { background:#eee; color:#333; border-radius:5px; }
+.zdatepicker dd span .selected,
+.zdatepicker dd span .selected:hover,
+.zdatepicker dd span .disable,
+.zdatepicker dd span .disable:hover,
+.zdatepicker dd span .area,
+.zdatepicker dd span .area:hover { border-radius:0px; }
 .zdatepicker dd .month,
-.zdatepicker dd .year { width:25%; height:50px; }
+.zdatepicker dd .year { width:25%; height:65px; margin-top:2px; margin-bottom:5px; }
 .zdatepicker dd .month a,
-.zdatepicker dd .year a{ width:100%; height:50px; line-height:50px; overflow:hidden; }
-.zdatepicker dd .week0 { color:#FF4400; }
-.zdatepicker dd .week6 { color:#88CC00; }
-.zdatepicker .close { display:block; text-align:right; background:#EEE; width:100%; padding:2px 0px; }
-.zdatepicker .close a{ display:inline-block; font:12px/12px "Tahoma"; width:14px; height:14px; margin-right:5px; text-align:center; text-decoration:none; color:#333; }
-.zdatepicker .close a:hover{ background:#C00; color:#FFF; border-radius:5px; }
+.zdatepicker dd .year a { width:100%; height:65px; line-height:65px; overflow:hidden; }
+
+/* zdatepicker close */
+.zdatepicker .close { display:block; height:0px; width:100%; margin-top:10px; padding:0px; filter:alpha(opacity=100); opacity:1;}
+.zdatepicker .close:hover { background:transparent; }
+.zdatepicker .close a { position:absolute; right:5px; bottom:5px; display:inline-block; border-radius:40px; height:40px; width:40px; text-align:center; line-height:40px; text-decoration:none; box-shadow:0 3px 4px rgba(0,0,0,.175); }
+.zdatepicker .close a:before { font-family:FontAwesome; content:"\f00d"; font-size:22px; }
+.zdatepicker .close a:hover { }
+
+/* bootstrap theme */
+.zdatepicker dd .week0 { color:#d9534f; }
+.zdatepicker dd .week6 { color:#5cb85c; }
+.zdatepicker dd span a:hover { }
+.zdatepicker dd span .selected { color:#fff; background:#428bca; }
+.zdatepicker dd span .selected:hover { color:#fff; background:#3071a9; }
+.zdatepicker dd span .disable,
+.zdatepicker dd span .disable:hover { color:#ccc; background:#eee; cursor:not-allowed; }
+.zdatepicker dd span .area { color:#fff; background:#5bc0de; }
+.zdatepicker dd span .area.selected,
+.zdatepicker dd span .area:hover { color:#fff; background:#31b0d5; }
+.zdatepicker .close a { color:#fff; background:#d9534f; }
+.zdatepicker .close a:hover { color:#fff; background:#c9302c; }
 </pre>
 
 
@@ -1003,7 +1040,7 @@
 
 <h4 id="demo_15">15. Replace return function. and use callback.</h4>
 <div class="demo">
-    <iframe src="./demo15.html" frameborder="0" height="250" width="450"></iframe>
+    <iframe src="./demo15.html" frameborder="0" height="330" width="450"></iframe>
 
     <div class="code">
         <h5>Code：</h5>

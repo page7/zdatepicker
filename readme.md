@@ -1,14 +1,28 @@
 <h2>zdatepicker - a simple,light-weight datepicker plugin for jquery</h2>
 
-<h3>中文文档</h3>
-<a href="http://www.nolanchou.com/zdatepicker/demo_zh.php" target="_blank">点击这里</a>
-<br />
-
-<h3>DOC & DEMO</h3>
+<h3>DOCUMENT & DEMO</h3>
 <a href="http://www.nolanchou.com/zdatepicker/demo.php" target="_blank">Demo.</a>
 <br />
 
 <h3>Change Log</h3>
+
+<h4>3.1.9</h4>
+Date：2014-11-04<br />
+Contributor：<a href="http://www.nolanchou.com" target="_blank">page7</a><br />
+	　1.Update: options - "prevbtn"/"nextbtn" default value is empty.<br />
+	　2.Update: dom id prefix change to "zdatepicker".<br />
+	　3.Update: Use "Bootstrap" theme.<br />
+	　4.Update: Use "Font Awesome" for button.<br />
+	　5.Fix Bugs.<br />
+	　6.Next: Version will update to 4.0: (new UI design for mobile / new Callback / rewrite code).<br />
+<br />
+
+<h4>3.1.3</h4>
+Date：2014-09-23<br />
+Contributor：<a href="http://www.nolanchou.com" target="_blank">page7</a><br />
+	　1.Add: new a data on every demo - "date".<br />
+	　2.Fix bug.<br />
+<br />
 
 <h4>3.1.1</h4>
 Date：2014-02-08<br />

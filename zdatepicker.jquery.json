@@ -8,7 +8,7 @@
 		"era",
 		"multiple"
     ],
-    "version": "3.1.2",
+    "version": "3.1.9",
     "author": {
         "name": "Nolan Chou",
 		"email": "zhounan0120@gmail.com",
@@ -29,7 +29,7 @@
     "bugs": "https://github.com/page7/zdatepicker/issues",
     "homepage": "https://github.com/page7/zdatepicker",
     "docs": "http://www.nolanchou.com/zdatepicker/demo.php",
-    "download": "http://www.nolanchou.com/zdatepicker/demo.php#download",
+    "download": "https://github.com/page7/zdatepicker/",
     "dependencies": {
         "jquery": ">=1.6"
     }
