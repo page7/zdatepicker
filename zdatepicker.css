@@ -18,7 +18,7 @@
 .zdatepicker dt span a:after { font-family:FontAwesome; font-size:12px; content:"\f0d7"; margin-left:2px; }
 
 /* zdatepicker main */
-.zdatepicker dd { width:98%; padding:0px 2px; padding:0 0 5px 0; font-size:0px; word-spacing:-11px; text-align:left; }
+.zdatepicker dd { width:98%; padding:0 2px 5px 2px; margin:0px; font-size:0px; word-spacing:-11px; text-align:left; }
 
 /* zdatepicker sub-title (week) */
 .zdatepicker dd div { background:#fff; margin-bottom:3px; }
