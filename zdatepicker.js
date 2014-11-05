@@ -305,6 +305,12 @@ $.fn.zdatepicker = function(options) {
 		});
 
 		input.bind(opts.event, function(){
+			var date = getDomVal(obj);
+			if(date.length && !opts.selected){
+				lastSelected = date.join("-");
+				initSelect($.extend( {0:{0:lastSelected}}, opts.selected ));
+				_build(obj, calendar, date[0], date[1], 'date');
+			}
 			calendar.show();
 		});
 	};
@@ -408,7 +414,7 @@ $.fn.zdatepicker = function(options) {
 
 		addEvent(obj, calendar, mode);
 
-		if(_init == true) $(obj).trigger("focus", ["build"]);
+		if(_init == true) $(obj).trigger("focus");
 	};
 
 
@@ -500,7 +506,7 @@ $.fn.zdatepicker = function(options) {
 		// add event for record mouse over the calendar.
 		calendar.find("span,a").mouseout(function(){ calendar.data("foc", opts.symbiont ? false : true); });
 		calendar.find("span,a").mouseover(function(){ calendar.data("foc", true); });
-		calendar.find("dd span").click(function(){ $(obj).trigger("focus", ["select any"]); });
+		calendar.find("dd span").click(function(){ $(obj).trigger("focus"); });
 
 		if(!opts.symbiont) calendar.data("foc", true);
 
@@ -562,7 +568,7 @@ $.fn.zdatepicker = function(options) {
 				date = _format('date', datearr);
 
 				// refocus
-				$(obj).trigger("focus", ["select"]);
+				$(obj).trigger("focus");
 
 				// Area
 				if($.isEmptyObject(opts.area)) {
