@@ -23,7 +23,7 @@
 /* zdatepicker sub-title (week) */
 .zdatepicker dd div { background:#fff; margin-bottom:3px; }
 .zdatepicker dd div span,
-.zdatepicker dd span { display:inline-block; width:14%; height:35px; line-height:32px; font-size:14px; word-spacing:normal; text-align:center; color:#666; vertical-align:top; }
+.zdatepicker dd span { display:inline-block; width:14.28%; height:35px; line-height:32px; font-size:14px; word-spacing:normal; text-align:center; color:#666; vertical-align:top; }
 .zdatepicker dd div span { font-size:12px; height:25px; line-height:25px; }
 
 /* zdatepicker body */

@@ -6,40 +6,13 @@
  * Dual licensed under the MIT licenses.
  * http://jquery.org/license
  *
- * Version:3.1.9
+ * Version:3.2.0
  * Date:2014-11
  */
 
 ;(function ($) {
 
 $.fn.zdatepicker = function(options) {
-
-	$.fn.zdatepicker.defaults = {
-		classname	: "zdatepicker",
-		event		: "click",
-		viewmonths	: 2,
-		format		: {date:"yyyy-mm-dd",month:"yyyy mm",year:"yyyy",onlymonth:"mm"}, //only support: yyyy-2014, mm-monthstr, dd-01. 1 digital date / 2 digital year / week please use "onReturn" to format.
-		daystr		: ["Sun","Mon","Tue","Wed","Thur","Fri","Sat"],
-		monthstr	: ["01","02","03","04","05","06","07","08","09","10","11","12"],
-		weekoffset	: 0,
-		year2str	: null,
-		str2year	: null,
-		initmonth	: null,
-		symbiont	: true,
-		readonly	: false,
-		disable		: {},	   // disable, area, selected must use 1970-1-1 or 1970-01-01 string format.
-		area		: {},
-		selected	: false,
-		replace		: null,
-		pos			: {},
-		use			: false,  // use option must be a jquery selector string. eq : #id or .class ..
-		show		: null,
-		prevbtn		: "",
-		nextbtn		: "",
-		closebtn	: false,
-		onFilter	: null,
-		onReturn	: null
-	};
 
 	var _init = false;
 
@@ -330,6 +303,10 @@ $.fn.zdatepicker = function(options) {
 		input.blur(function(){
 			if( !calendar.data("foc") ) calendar.hide();
 		});
+
+		input.bind(opts.event, function(){
+			calendar.show();
+		});
 	};
 
 
@@ -431,7 +408,7 @@ $.fn.zdatepicker = function(options) {
 
 		addEvent(obj, calendar, mode);
 
-		if(_init == true) $(obj).focus();
+		if(_init == true) $(obj).trigger("focus", ["build"]);
 	};
 
 
@@ -523,7 +500,7 @@ $.fn.zdatepicker = function(options) {
 		// add event for record mouse over the calendar.
 		calendar.find("span,a").mouseout(function(){ calendar.data("foc", opts.symbiont ? false : true); });
 		calendar.find("span,a").mouseover(function(){ calendar.data("foc", true); });
-		calendar.find("dd span").click(function(){ $(obj).focus(); });
+		calendar.find("dd span").click(function(){ $(obj).trigger("focus", ["select any"]); });
 
 		if(!opts.symbiont) calendar.data("foc", true);
 
@@ -598,7 +575,7 @@ $.fn.zdatepicker = function(options) {
 				}
 
 				// refocus
-				$(obj).focus();
+				$(obj).trigger("focus", ["select"]);
 
 				// Area
 				if($.isEmptyObject(opts.area)) {
@@ -769,17 +746,41 @@ $.fn.zdatepicker = function(options) {
 		if(opts.show == true) buildCalendar(this);
 
 		// option:event is empty
-		if(opts.event) $(this).unbind(opts.event).bind(opts.event, function(){ buildCalendar(this); });
+		if(opts.event) $(this).one(opts.event, function(e){ buildCalendar(this); });
 
 		_init = true;
 	});
 
 };
 
+$.fn.zdatepicker.defaults = {
+	classname	: "zdatepicker",
+	event		: "click",
+	viewmonths	: 2,
+	format		: {date:"yyyy-mm-dd",month:"yyyy mm",year:"yyyy",onlymonth:"mm"}, //only support: yyyy-2014, mm-monthstr, dd-01. 1 digital date / 2 digital year / week please use "onReturn" to format.
+	daystr		: ["Sun","Mon","Tue","Wed","Thur","Fri","Sat"],
+	monthstr	: ["01","02","03","04","05","06","07","08","09","10","11","12"],
+	weekoffset	: 0,
+	year2str	: null,
+	str2year	: null,
+	initmonth	: null,
+	symbiont	: true,
+	readonly	: false,
+	disable		: {},	   // disable, area, selected must use 1970-1-1 or 1970-01-01 string format.
+	area		: {},
+	selected	: false,
+	replace		: null,
+	pos			: {},
+	use			: false,  // use option must be a jquery selector string. eq : #id or .class ..
+	show		: null,
+	prevbtn		: "",
+	nextbtn		: "",
+	closebtn	: false,
+	onFilter	: null,
+	onReturn	: null
+};
 
 // Callback
 $.fn.zdatepicker.callback = function(type, arg){ }
-
-
 
 })(jQuery);
