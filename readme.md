@@ -6,11 +6,12 @@
 
 <h3>Change Log</h3>
 
-<h4>3.2.0</h4>
+<h4>3.2.1</h4>
 Date：2014-11-04<br />
 Contributor：<a href="http://www.nolanchou.com" target="_blank">page7</a><br />
 	　1.Fix Bug: "focus" event options.<br />
 	　2.Fix Bug: new style some details.<br />
+	　3.Update: allow set $.fn.zdatepicker.defaults values in globle.<br />
 <br />
 
 <h4>3.1.9</h4>
