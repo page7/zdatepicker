@@ -561,25 +561,26 @@ $.fn.zdatepicker = function(options) {
 				var dateObj = getDateObj(datearr);
 				date = _format('date', datearr);
 
-				// change selected value
-				if(select) {
-					if($(this).is(".selected")){
-						selected.unshift(date);
-					}else{
-						selected = $.map(selected, function(n){
-							return n != date ? n : null;
-						});
-					}
-				}else{
-					selected = new Array(date);
-				}
-
 				// refocus
 				$(obj).trigger("focus", ["select"]);
 
 				// Area
 				if($.isEmptyObject(opts.area)) {
 					$(this).toggleClass("selected");
+
+					// change selected value
+					if(select) {
+						if($(this).is(".selected")){
+							selected.unshift(date);
+						}else{
+							selected = $.map(selected, function(n){
+								return n != date ? n : null;
+							});
+						}
+					}else{
+						selected = new Array(date);
+					}
+
 					lastSelected = $(this).is(".selected") ? date : null;
 
 					_return(date, dateObj, obj, calendar, this, selected);
