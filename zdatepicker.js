@@ -410,7 +410,7 @@ $.fn.zdatepicker = function(options) {
 
 			calendar.append("<dl><dt>"+prev+'<span>'+title+"</span>"+next+"</dt><dd>"+main+"</dd></dl>");
 		}
-		if(opts.closebtn !== false) calendar.append('<dl class="close"><a href="javascript:;">'+(opts.closebtn === true ? 'x' : opts.closebtn)+'</a></dl>');
+		if(opts.closebtn !== false) calendar.append('<dl class="close"><a href="javascript:;">'+(opts.closebtn === true ? '' : opts.closebtn)+'</a></dl>');
 
 		addEvent(obj, calendar, mode);
 
